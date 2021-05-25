@@ -11,7 +11,7 @@ require_once DOKU_INC . 'inc/parser/renderer.php';
 require_once DOKU_INC . 'inc/pluginutils.php';
 
 class Doku_Renderer {
-    var $info = array(
+    var array $info = array(
         'cache' => TRUE, // may the rendered result cached?
         'toc'   => TRUE, // render the TOC?
     );
@@ -39,7 +39,7 @@ class Doku_Renderer {
      * handle nested render instructions
      * this method (and nest_close method) should not be overloaded in actual renderer output classes
      */
-    function nest($instructions) {
+    function nest(iterable $instructions) {
 
       foreach ( $instructions as $instruction ) {
         // execute the callback against ourself
@@ -198,11 +198,11 @@ class Doku_Renderer {
 
     function tablerow_close(){}
 
-    function tableheader_open($colspan = 1, $align = NULL){}
+    function tableheader_open(int $colspan = 1, $align = NULL){}
 
     function tableheader_close(){}
 
-    function tablecell_open($colspan = 1, $align = NULL){}
+    function tablecell_open(int $colspan = 1, $align = NULL){}
 
     function tablecell_close(){}
 

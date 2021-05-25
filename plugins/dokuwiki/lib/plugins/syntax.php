@@ -19,9 +19,9 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
 
     var $allowedModesSetup = false;
     var $localised = false;         // set to true by setupLocale() after loading language dependent strings
-    var $lang = array();            // array to hold language dependent strings, best accessed via ->getLang()
+    var array $lang = array();            // array to hold language dependent strings, best accessed via ->getLang()
     var $configloaded = false;      // set to true by loadConfig() after loading plugin configuration variables
-    var $conf = array();            // array to hold plugin settings, best accessed via ->getConf()
+    var array $conf = array();            // array to hold plugin settings, best accessed via ->getConf()
 
     /**
      * General Info
@@ -55,7 +55,7 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
      * plugin's own markup. Needs to return an array of one or more of the mode types 
      * defined in $PARSER_MODES in parser.php
      */
-    function getAllowedTypes() {
+    function getAllowedTypes() : array {
         return array();
     }
 
@@ -71,7 +71,7 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
      *
      * @see Doku_Handler_Block
      */
-    function getPType(){
+    function getPType(): string {
         return 'normal';
     }
 
@@ -148,7 +148,7 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
     // extract from class name, format = <plugin type>_plugin_<name>[_<component name>]
     function getPluginType() { list($t) = explode('_', get_class($this), 2); return $t;  }
     function getPluginName() { list($t, $p, $n) = explode('_', get_class($this), 4); return $n; }
-    function getPluginComponent() { list($t, $p, $n, $c) = explode('_', get_class($this), 4); return (isset($c)?$c:''); }
+    function getPluginComponent() : string { list($t, $p, $n, $c) = explode('_', get_class($this), 4); return (isset($c)?$c:''); }
 
     // localisation methods
     /**
@@ -161,7 +161,7 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
      * @param   $id     id of the string to be retrieved
      * @return  string  string in appropriate language or english if not available
      */
-    function getLang($id) {
+    function getLang($id) : string {
       if (!$this->localised) $this->setupLocale();
       
       return (isset($this->lang[$id]) ? $this->lang[$id] : '');
@@ -185,7 +185,7 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
      * prepends appropriate path for a language dependent filename
      * plugin equivalent of localFN()
      */
-    function localFN($id) {
+    function localFN(string $id) : string {
       global $conf;
       $plugin = $this->getPluginName();
       $file = DOKU_PLUGIN.$plugin.'/lang/'.$conf['lang'].'/'.$id.'.txt';
@@ -254,7 +254,7 @@ class DokuWiki_Syntax_Plugin extends Doku_Parser_Mode {
    *
    * @return    array    setting => value
    */
-  function readDefaultSettings() {
+  function readDefaultSettings() : array {
 
     $path = DOKU_PLUGIN.$this->getPluginName().'/conf/';
     $conf = array();

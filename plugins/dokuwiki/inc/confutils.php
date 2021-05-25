@@ -13,7 +13,7 @@
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function mimetype($file){
+function mimetype(string $file): array {
   $ret    = array(false,false); // return array
   $mtypes = getMimeTypes();     // known mimetypes
   $exts   = join('|',array_keys($mtypes));  // known extensions (regexp)
@@ -141,7 +141,7 @@ function getWordblocks() {
  * @author Harry Fuecks <hfuecks@gmail.com>
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function confToHash($file,$lower=false) {
+function confToHash(string $file,bool $lower=false) : array {
   $conf = array();
   $lines = @file( $file );
   if ( !$lines ) return $conf;

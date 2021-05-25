@@ -15,7 +15,7 @@
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_wikilink($id,$name=NULL,$search=''){
+function html_wikilink($id,$name=NULL,string $search=''){
   static $xhtml_renderer = NULL;
   if(is_null($xhtml_renderer)){
     require_once(DOKU_INC.'inc/parser/xhtml.php');
@@ -30,7 +30,7 @@ function html_wikilink($id,$name=NULL,$search=''){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_attbuild($attributes){
+function html_attbuild(iterable $attributes): string {
   $ret = '';
   foreach ( $attributes as $key => $value ) {
     $ret .= $key.'="'.formtext($value).'" ';
@@ -52,26 +52,39 @@ function html_login(){
   print p_locale_xhtml('login');
   ?>
     <div class="centeralign">
-    <form action="<?php echo script()?>" accept-charset="<?php echo $lang['encoding']?>"
+    <form action="<?php /*T     <div class="centeralign">
+    <form action="*/echo script()?><?php /*W3*/ ?>" accept-charset="<?php echo $lang['encoding']/*T " accept-charset="*/?>"
           method="post" id="dw__login">
       <fieldset>
-        <legend><?php echo $lang['btn_login']?></legend>
-        <input type="hidden" name="id" value="<?php echo $ID?>" />
+        <legend><?php ?><?php /*W3*/ echo $lang['btn_login']?></legend>
+        <input type="hidden" name="id" value="<?php /*T "
+          method="post" id="dw__login">
+      <fieldset>
+        <legend>*/?><?php /*W3*/ echo $ID?>" />
         <input type="hidden" name="do" value="login" />
         <label class="block">
-          <span><?php echo $lang['user']?></span>
-          <input type="text" name="u" value="<?php echo formText($_REQUEST['u'])?>"
+          <span><?php /*T </legend>
+        <input type="hidden" name="id" value="*/echo $lang['user']?><?php /*W3*/ ?></span>
+          <input type="text" name="u" value="<?php echo formText($_REQUEST['u'])/*T " />
+        <input type="hidden" name="do" value="login" />
+        <label class="block">
+          <span>*/?>"
                  class="edit" id="focus__this" />
         </label><br />
         <label class="block">
-          <span><?php echo $lang['pass']?></span>
+          <span><?php ?><?php /*W3*/ echo $lang['pass']?></span>
           <input type="password" name="p" class="edit" />
         </label><br />
         <label for="remember__me" class="simple">
           <input type="checkbox" name="r" id="remember__me" value="1" />
-          <span><?php echo $lang['remember']?></span>
+          <span><?php /*T </span>
+          <input type="text" name="u" value="*/?><?php /*W3*/ echo $lang['remember']?></span>
         </label>
-        <input type="submit" value="<?php echo $lang['btn_login']?>" class="button" />
+        <input type="submit" value="<?php /*T "
+                 class="edit" id="focus__this" />
+        </label><br />
+        <label class="block">
+          <span>*/echo $lang['btn_login']?><?php /*W3*/ ?>" class="button" />
       </fieldset>
     </form>
   <?php
@@ -82,13 +95,18 @@ function html_login(){
       print '</p>';
     }
 
-    if ($auth->canDo('modPass') && actionOK('resendpwd')) {
+    /*T </span>
+          <input type="password" name="p" class="edit" />
+        </label><br />
+        <label for="remember__me" class="simple">
+          <input type="checkbox" name="r" id="remember__me" value="1" />
+          <span>*/if ($auth->canDo('modPass') && actionOK('resendpwd')) {
       print '<p>';
       print $lang['pwdforget'];
       print ': <a href="'.wl($ID,'do=resendpwd').'" rel="nofollow" class="wikilink1">'.$lang['btn_resendpwd'].'</a>';
       print '</p>';
     }
-  ?>
+  ?><?php /*W3*/ ?>
     </div>
   <?php
 /*
@@ -105,7 +123,7 @@ function html_login(){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_secedit_button($matches){
+function html_secedit_button($matches): string {
   global $ID;
   global $INFO;
 
@@ -128,7 +146,7 @@ function html_secedit_button($matches){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_secedit($text,$show=true){
+function html_secedit($text,bool $show=true){
   global $INFO;
 
   if($INFO['writable'] && $show && !$INFO['rev']){
@@ -146,7 +164,7 @@ function html_secedit($text,$show=true){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_topbtn(){
+function html_topbtn(): string {
   global $lang;
 
   $ret  = '';
@@ -160,7 +178,7 @@ function html_topbtn(){
  *
  * @author Matthias Grimm <matthiasgrimm@users.sourceforge.net>
  */
-function html_backtomedia_button($params,$akey=''){
+function html_backtomedia_button(array $params,string $akey=''): string {
   global $conf;
   global $lang;
 
@@ -191,7 +209,7 @@ function html_backtomedia_button($params,$akey=''){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_btn($name,$id,$akey,$params,$method='get',$tooltip=''){
+function html_btn(string $name,string $id,string $akey,$params,string $method='get',string $tooltip=''): string {
   global $conf;
   global $lang;
 
@@ -289,17 +307,25 @@ function html_draft(){
 
   echo p_locale_xhtml('draft');
   ?>
-  <form id="dw__editform" method="post" action="<?php echo script()?>"
-   accept-charset="<?php echo $lang['encoding']?>"><div class="no">
-    <input type="hidden" name="id"   value="<?php echo $ID?>" />
-    <input type="hidden" name="date" value="<?php echo $draft['date']?>" /></div>
-    <textarea name="wikitext" id="wiki__text" readonly="readonly" cols="80" rows="10" class="edit"><?php echo "\n".formText($text)?></textarea>
+  <form id="dw__editform" method="post" action="<?php /*T   <form id="dw__editform" method="post" action="*/echo script()?><?php /*W3*/ ?>"
+   accept-charset="<?php echo $lang['encoding']/*T "
+   accept-charset="*/?>"><div class="no">
+    <input type="hidden" name="id"   value="<?php ?><?php /*W3*/ echo $ID?>" />
+    <input type="hidden" name="date" value="<?php /*T "><div class="no">
+    <input type="hidden" name="id"   value="*/?><?php /*W3*/ echo $draft['date']?>" /></div>
+    <textarea name="wikitext" id="wiki__text" readonly="readonly" cols="80" rows="10" class="edit"><?php /*T " />
+    <input type="hidden" name="date" value="*/echo "\n".formText($text)?><?php /*W3*/ ?></textarea>
 
-    <div id="draft__status"><?php echo $lang['draftdate'].' '.date($conf['dformat'],filemtime($INFO['draft']))?></div>
+    <div id="draft__status"><?php echo $lang['draftdate'].' '.date($conf['dformat'],filemtime($INFO['draft']))/*T " /></div>
+    <textarea name="wikitext" id="wiki__text" readonly="readonly" cols="80" rows="10" class="edit">*/?></div>
 
-    <input class="button" type="submit" name="do[recover]" value="<?php echo $lang['btn_recover']?>" tabindex="1" />
-    <input class="button" type="submit" name="do[draftdel]" value="<?php echo $lang['btn_draftdel']?>" tabindex="2" />
-    <input class="button" type="submit" name="do[show]" value="<?php echo $lang['btn_cancel']?>" tabindex="3" />
+    <input class="button" type="submit" name="do[recover]" value="<?php ?><?php /*W3*/ echo $lang['btn_recover']?>" tabindex="1" />
+    <input class="button" type="submit" name="do[draftdel]" value="<?php /*T </textarea>
+
+    <div id="draft__status">*/?><?php /*W3*/ echo $lang['btn_draftdel']?>" tabindex="2" />
+    <input class="button" type="submit" name="do[show]" value="<?php /*T </div>
+
+    <input class="button" type="submit" name="do[recover]" value="*/echo $lang['btn_cancel']?><?php /*W3*/ ?>" tabindex="3" />
   </form>
   <?php
 }
@@ -643,7 +669,7 @@ function html_index($ns){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_list_index($item){
+function html_list_index($item): string {
   global $ID;
   $ret = '';
   $base = ':'.$item['id'];
@@ -667,7 +693,7 @@ function html_list_index($item){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_li_index($item){
+function html_li_index($item): string {
   if($item['type'] == "f"){
     return '<li class="level'.$item['level'].'">';
   }elseif($item['open']){
@@ -682,7 +708,7 @@ function html_li_index($item){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_li_default($item){
+function html_li_default($item): string {
   return '<li class="level'.$item['level'].'">';
 }
 
@@ -701,7 +727,7 @@ function html_li_default($item){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_buildlist($data,$class,$func,$lifunc='html_li_default'){
+function html_buildlist(iterable $data,string $class,$func,$lifunc='html_li_default'): string {
   $level = 0;
   $opens = 0;
   $ret   = '';
@@ -780,7 +806,7 @@ function html_backlinks(){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function html_diff($text='',$intro=true){
+function html_diff(string $text='',bool $intro=true){
   require_once(DOKU_INC.'inc/DifferenceEngine.php');
   global $ID;
   global $REV;
@@ -824,16 +850,23 @@ function html_diff($text='',$intro=true){
     <table class="diff">
       <tr>
         <th colspan="2">
-          <?php echo $left?>
+          <?php /*T     <table class="diff">
+      <tr>
+        <th colspan="2">
+          */echo $left?><?php /*W3*/ ?>
         </th>
         <th colspan="2">
-          <?php echo $right?>
+          <?php echo $right/*T         </th>
+        <th colspan="2">
+          */?>
         </th>
       </tr>
-      <?php echo $tdf->format($df)?>
+      <?php ?><?php /*W3*/ echo $tdf->format($df)?>
     </table>
   <?php
-}
+/*T         </th>
+      </tr>
+      */?><?php /*W3*/ }
 
 /**
  * show warning on conflict detection
@@ -846,19 +879,25 @@ function html_conflict($text,$summary){
 
   print p_locale_xhtml('conflict');
   ?>
-  <form id="dw__editform" method="post" action="<?php echo script()?>" accept-charset="<?php echo $lang['encoding']?>">
+  <form id="dw__editform" method="post" action="<?php /*T   <form id="dw__editform" method="post" action="*/echo script()?><?php /*W3*/ ?>" accept-charset="<?php echo $lang['encoding']/*T " accept-charset="*/?>">
   <div class="centeralign">
-    <input type="hidden" name="id" value="<?php echo $ID?>" />
-    <input type="hidden" name="wikitext" value="<?php echo formText($text)?>" />
-    <input type="hidden" name="summary" value="<?php echo formText($summary)?>" />
+    <input type="hidden" name="id" value="<?php ?><?php /*W3*/ echo $ID?>" />
+    <input type="hidden" name="wikitext" value="<?php /*T ">
+  <div class="centeralign">
+    <input type="hidden" name="id" value="*/?><?php /*W3*/ echo formText($text)?>" />
+    <input type="hidden" name="summary" value="<?php /*T " />
+    <input type="hidden" name="wikitext" value="*/echo formText($summary)?><?php /*W3*/ ?>" />
 
-    <input class="button" type="submit" name="do[save]" value="<?php echo $lang['btn_save']?>" accesskey="s" title="<?php echo $lang['btn_save']?> [ALT+S]" />
-    <input class="button" type="submit" name="do[cancel]" value="<?php echo $lang['btn_cancel']?>" />
+    <input class="button" type="submit" name="do[save]" value="<?php echo $lang['btn_save']/*T " />
+    <input type="hidden" name="summary" value="*/?>" accesskey="s" title="<?php ?><?php /*W3*/ echo $lang['btn_save']?> [ALT+S]" />
+    <input class="button" type="submit" name="do[cancel]" value="<?php /*T " />
+
+    <input class="button" type="submit" name="do[save]" value="*/?><?php /*W3*/ echo $lang['btn_cancel']?>" />
   </div>
   </form>
   <br /><br /><br /><br />
   <?php
-}
+/*T " accesskey="s" title="*/}
 
 /**
  * Prints the global message array
@@ -890,46 +929,66 @@ function html_register(){
   print p_locale_xhtml('register');
 ?>
   <div class="centeralign">
-  <form id="dw__register" method="post" action="<?php echo wl($ID)?>" accept-charset="<?php echo $lang['encoding']?>">
+  <form id="dw__register" method="post" action="<?php /*T   <div class="centeralign">
+  <form id="dw__register" method="post" action="*/echo wl($ID)?><?php /*W3*/ ?>" accept-charset="<?php echo $lang['encoding']/*T " accept-charset="*/?>">
   <fieldset>
     <input type="hidden" name="do" value="register" />
     <input type="hidden" name="save" value="1" />
 
-    <legend><?php echo $lang['register']?></legend>
+    <legend><?php ?><?php /*W3*/ echo $lang['register']?></legend>
     <label class="block">
-      <?php echo $lang['user']?>
-      <input type="text" name="login" class="edit" size="50" value="<?php echo formText($_POST['login'])?>" />
+      <?php /*T ">
+  <fieldset>
+    <input type="hidden" name="do" value="register" />
+    <input type="hidden" name="save" value="1" />
+
+    <legend>*/?><?php /*W3*/ echo $lang['user']?>
+      <input type="text" name="login" class="edit" size="50" value="<?php /*T </legend>
+    <label class="block">
+      */echo formText($_POST['login'])?><?php /*W3*/ ?>" />
     </label><br />
 
     <?php
       if (!$conf['autopasswd']) {
     ?>
       <label class="block">
-        <?php echo $lang['pass']?>
+        <?php /*T       <label class="block">
+        */echo $lang['pass']?><?php /*W3*/ ?>
         <input type="password" name="pass" class="edit" size="50" />
       </label><br />
       <label class="block">
-        <?php echo $lang['passchk']?>
+        <?php echo $lang['passchk']/*T         <input type="password" name="pass" class="edit" size="50" />
+      </label><br />
+      <label class="block">
+        */?>
         <input type="password" name="passchk" class="edit" size="50" />
       </label><br />
     <?php
-      }
-    ?>
+      ?><?php /*W3*/ }
+    /*T       <input type="text" name="login" class="edit" size="50" value="*/?>
 
     <label class="block">
-      <?php echo $lang['fullname']?>
-      <input type="text" name="fullname" class="edit" size="50" value="<?php echo formText($_POST['fullname'])?>" />
+      <?php ?><?php /*W3*/ echo $lang['fullname']?>
+      <input type="text" name="fullname" class="edit" size="50" value="<?php /*T " />
+    </label><br />
+
+    */?><?php /*W3*/ echo formText($_POST['fullname'])?>" />
     </label><br />
     <label class="block">
-      <?php echo $lang['email']?>
-      <input type="text" name="email" class="edit" size="50" value="<?php echo formText($_POST['email'])?>" />
+      <?php /*T 
+    <label class="block">
+      */echo $lang['email']?><?php /*W3*/ ?>
+      <input type="text" name="email" class="edit" size="50" value="<?php echo formText($_POST['email'])/*T       <input type="text" name="fullname" class="edit" size="50" value="*/?>" />
     </label><br />
-    <input type="submit" class="button" value="<?php echo $lang['register']?>" />
+    <input type="submit" class="button" value="<?php ?><?php /*W3*/ echo $lang['register']?>" />
   </fieldset>
   </form>
   </div>
 <?php
-}
+/*T " />
+    </label><br />
+    <label class="block">
+      */?><?php /*W3*/ }
 
 /**
  * Print the update profile form
@@ -950,51 +1009,74 @@ function html_updateprofile(){
   if (empty($_POST['email'])) $_POST['email'] = $INFO['userinfo']['mail'];
 ?>
   <div class="centeralign">
-  <form id="dw__register" method="post" action="<?php echo wl($ID)?>" accept-charset="<?php echo $lang['encoding']?>">
+  <form id="dw__register" method="post" action="<?php /*T   <div class="centeralign">
+  <form id="dw__register" method="post" action="*/echo wl($ID)?><?php /*W3*/ ?>" accept-charset="<?php echo $lang['encoding']/*T " accept-charset="*/?>">
   <fieldset style="width: 80%;">
     <input type="hidden" name="do" value="profile" />
     <input type="hidden" name="save" value="1" />
 
-    <legend><?php echo $lang['profile']?></legend>
+    <legend><?php ?><?php /*W3*/ echo $lang['profile']?></legend>
     <label class="block">
-      <?php echo $lang['user']?>
-      <input type="text" name="fullname" disabled="disabled" class="edit" size="50" value="<?php echo formText($_SERVER['REMOTE_USER'])?>" />
+      <?php /*T ">
+  <fieldset style="width: 80%;">
+    <input type="hidden" name="do" value="profile" />
+    <input type="hidden" name="save" value="1" />
+
+    <legend>*/?><?php /*W3*/ echo $lang['user']?>
+      <input type="text" name="fullname" disabled="disabled" class="edit" size="50" value="<?php /*T </legend>
+    <label class="block">
+      */echo formText($_SERVER['REMOTE_USER'])?><?php /*W3*/ ?>" />
     </label><br />
     <label class="block">
-      <?php echo $lang['fullname']?>
-      <input type="text" name="fullname" <?php if(!$auth->canDo('modName')) echo 'disabled="disabled"'?> class="edit" size="50" value="<?php echo formText($_POST['fullname'])?>" />
+      <?php echo $lang['fullname']/*T       <input type="text" name="fullname" disabled="disabled" class="edit" size="50" value="*/?>
+      <input type="text" name="fullname" <?php ?><?php /*W3*/ if(!$auth->canDo('modName')) echo 'disabled="disabled"'?> class="edit" size="50" value="<?php /*T " />
     </label><br />
     <label class="block">
-      <?php echo $lang['email']?>
-      <input type="text" name="email" <?php if(!$auth->canDo('modName')) echo 'disabled="disabled"'?> class="edit" size="50" value="<?php echo formText($_POST['email'])?>" />
+      */?><?php /*W3*/ echo formText($_POST['fullname'])?>" />
+    </label><br />
+    <label class="block">
+      <?php /*T       <input type="text" name="fullname" */echo $lang['email']?><?php /*W3*/ ?>
+      <input type="text" name="email" <?php if(!$auth->canDo('modName')) echo 'disabled="disabled"'/*T  class="edit" size="50" value="*/?> class="edit" size="50" value="<?php ?><?php /*W3*/ echo formText($_POST['email'])?>" />
     </label><br /><br />
 
-    <?php if($auth->canDo('modPass')) { ?>
+    <?php /*T " />
+    </label><br />
     <label class="block">
-      <?php echo $lang['newpass']?>
+      */?><?php /*W3*/ if($auth->canDo('modPass')) { ?>
+    <label class="block">
+      <?php /*T     <label class="block">
+      */echo $lang['newpass']?><?php /*W3*/ ?>
       <input type="password" name="newpass" class="edit" size="50" />
     </label><br />
     <label class="block">
-      <?php echo $lang['passchk']?>
+      <?php echo $lang['passchk']/*T       <input type="password" name="newpass" class="edit" size="50" />
+    </label><br />
+    <label class="block">
+      */?>
       <input type="password" name="passchk" class="edit" size="50" />
     </label><br />
-    <?php } ?>
+    <?php ?><?php /*W3*/ } ?>
 
-    <?php if ($conf['profileconfirm']) { ?>
+    <?php /*T       <input type="text" name="email" */if ($conf['profileconfirm']) { ?>
       <br />
       <label class="block">
-      <?php echo $lang['oldpass']?>
+      <?php /*T       <br />
+      <label class="block">
+      */echo $lang['oldpass']?><?php /*W3*/ ?>
       <input type="password" name="oldpass" class="edit" size="50" />
     </label><br />
-    <?php } ?>
+    <?php } ?><?php /*W3*/ ?>
 
-    <input type="submit" class="button" value="<?php echo $lang['btn_save']?>" />
-    <input type="reset" class="button" value="<?php echo $lang['btn_reset']?>" />
+    <input type="submit" class="button" value="<?php echo $lang['btn_save']/*T  class="edit" size="50" value="*/?>" />
+    <input type="reset" class="button" value="<?php ?><?php /*W3*/ echo $lang['btn_reset']?>" />
   </fieldset>
   </form>
   </div>
 <?php
-}
+/*T " />
+    </label><br /><br />
+
+    */?><?php /*W3*/ }
 
 /**
  * This displays the edit form (lots of logic included)
@@ -1003,7 +1085,7 @@ function html_updateprofile(){
  * @triggers HTML_PAGE_FROMTEMPLATE
  * @author   Andreas Gohr <andi@splitbrain.org>
  */
-function html_edit($text=null,$include='edit'){ //FIXME: include needed?
+function html_edit($text=null,string $include='edit'){ //FIXME: include needed?
   global $ID;
   global $REV;
   global $DATE;
@@ -1063,53 +1145,78 @@ function html_edit($text=null,$include='edit'){ //FIXME: include needed?
   <div style="width:99%;">
 
    <div class="toolbar">
-      <div id="draft__status"><?php if(!empty($INFO['draft'])) echo $lang['draftdate'].' '.date($conf['dformat']);?></div>
-      <div id="tool__bar"><?php if(!$ro){?><a href="<?php echo DOKU_BASE?>lib/exe/mediamanager.php?ns=<?php echo $INFO['namespace']?>"
-      target="_blank"><?php echo $lang['mediaselect'] ?></a><?php }?></div>
+      <div id="draft__status"><?php /*T   <div style="width:99%;">
 
-      <?php if($wr){?>
+   <div class="toolbar">
+      <div id="draft__status">*/if(!empty($INFO['draft'])) echo $lang['draftdate'].' '.date($conf['dformat']);?><?php /*W3*/ ?></div>
+      <div id="tool__bar"><?php if(!$ro){?><a href="<?php /*T <a href="*/echo DOKU_BASE?><?php /*W3*/ ?>lib/exe/mediamanager.php?ns=<?php echo $INFO['namespace']/*T lib/exe/mediamanager.php?ns=*/?>"
+      target="_blank"><?php ?><?php /*W3*/ echo $lang['mediaselect'] ?></a><?php /*T "
+      target="_blank">*/?><?php /*W3*/ }/*T </div>
+      <div id="tool__bar">*/?></div>
+
+      <?php ?><?php /*W3*/ if($wr){?>
       <script type="text/javascript" charset="utf-8">
-        <?php /* sets changed to true when previewed */?>
-        textChanged = <?php ($pr) ? print 'true' : print 'false' ?>;
+        <?php /* sets changed to true when previewed *//*T       <script type="text/javascript" charset="utf-8">
+        */?>
+        textChanged = <?php ?><?php /*W3*/ ($pr) ? print 'true' : print 'false' /*T         textChanged = */?>;
       </script>
       <span id="spell__action"></span>
       <div id="spell__suggest"></div>
-      <?php } ?>
+      <?php ?><?php /*W3*/ } ?>
    </div>
    <div id="spell__result"></div>
 
 
-   <form id="dw__editform" method="post" action="<?php echo script()?>" accept-charset="<?php echo $lang['encoding']?>"><div class="no">
-      <input type="hidden" name="id"   value="<?php echo $ID?>" />
-      <input type="hidden" name="rev"  value="<?php echo $REV?>" />
-      <input type="hidden" name="date" value="<?php echo $DATE?>" />
-      <input type="hidden" name="prefix" value="<?php echo formText($PRE)?>" />
-      <input type="hidden" name="suffix" value="<?php echo formText($SUF)?>" />
+   <form id="dw__editform" method="post" action="<?php /*T </div>
+
+      */?><?php /*W3*/ echo script()?>" accept-charset="<?php /*T    </div>
+   <div id="spell__result"></div>
+
+
+   <form id="dw__editform" method="post" action="*/echo $lang['encoding']?><?php /*W3*/ ?>"><div class="no">
+      <input type="hidden" name="id"   value="<?php echo $ID/*T " accept-charset="*/?>" />
+      <input type="hidden" name="rev"  value="<?php ?><?php /*W3*/ echo $REV?>" />
+      <input type="hidden" name="date" value="<?php /*T "><div class="no">
+      <input type="hidden" name="id"   value="*/?><?php /*W3*/ echo $DATE?>" />
+      <input type="hidden" name="prefix" value="<?php /*T " />
+      <input type="hidden" name="rev"  value="*/echo formText($PRE)?><?php /*W3*/ ?>" />
+      <input type="hidden" name="suffix" value="<?php echo formText($SUF)/*T " />
+      <input type="hidden" name="date" value="*/?>" />
     </div>
 
-    <textarea name="wikitext" id="wiki__text" <?php echo $ro?> cols="80" rows="10" class="edit" tabindex="1"><?php echo "\n".formText($text)?></textarea>
+    <textarea name="wikitext" id="wiki__text" <?php ?><?php /*W3*/ echo $ro?> cols="80" rows="10" class="edit" tabindex="1"><?php /*T " />
+      <input type="hidden" name="prefix" value="*/?><?php /*W3*/ echo "\n".formText($text)?></textarea>
 
     <div id="wiki__editbar">
       <div id="size__ctl"></div>
-      <?php if($wr){?>
+      <?php /*T " />
+      <input type="hidden" name="suffix" value="*/if($wr){?>
          <div class="editButtons">
-            <input class="button" id="edbtn__save" type="submit" name="do[save]" value="<?php echo $lang['btn_save']?>" accesskey="s" title="<?php echo $lang['btn_save']?> [ALT+S]" tabindex="4" />
-            <input class="button" id="edbtn__preview" type="submit" name="do[preview]" value="<?php echo $lang['btn_preview']?>" accesskey="p" title="<?php echo $lang['btn_preview']?> [ALT+P]" tabindex="5" />
-            <input class="button" type="submit" name="do[draftdel]" value="<?php echo $lang['btn_cancel']?>" tabindex="6" />
+            <input class="button" id="edbtn__save" type="submit" name="do[save]" value="<?php /*T          <div class="editButtons">
+            <input class="button" id="edbtn__save" type="submit" name="do[save]" value="*/echo $lang['btn_save']?><?php /*W3*/ ?>" accesskey="s" title="<?php echo $lang['btn_save']/*T " accesskey="s" title="*/?> [ALT+S]" tabindex="4" />
+            <input class="button" id="edbtn__preview" type="submit" name="do[preview]" value="<?php ?><?php /*W3*/ echo $lang['btn_preview']?>" accesskey="p" title="<?php /*T  [ALT+S]" tabindex="4" />
+            <input class="button" id="edbtn__preview" type="submit" name="do[preview]" value="*/?><?php /*W3*/ echo $lang['btn_preview']?> [ALT+P]" tabindex="5" />
+            <input class="button" type="submit" name="do[draftdel]" value="<?php /*T " accesskey="p" title="*/echo $lang['btn_cancel']?><?php /*W3*/ ?>" tabindex="6" />
          </div>
-      <?php } ?>
+      <?php } ?><?php /*W3*/ ?>
       <?php if($wr){ ?>
         <div class="summary">
-           <label for="edit__summary" class="nowrap"><?php echo $lang['summary']?>:</label>
-           <input type="text" class="edit" name="summary" id="edit__summary" size="50" value="<?php echo formText($SUM)?>" tabindex="2" />
-           <?php html_minoredit()?>
+           <label for="edit__summary" class="nowrap"><?php /*T         <div class="summary">
+           <label for="edit__summary" class="nowrap">*/echo $lang['summary']?><?php /*W3*/ ?>:</label>
+           <input type="text" class="edit" name="summary" id="edit__summary" size="50" value="<?php echo formText($SUM)/*T :</label>
+           <input type="text" class="edit" name="summary" id="edit__summary" size="50" value="*/?>" tabindex="2" />
+           <?php ?><?php /*W3*/ html_minoredit()?>
         </div>
-      <?php }?>
+      <?php /*T " tabindex="2" />
+           */?><?php /*W3*/ }/*T " />
+    </div>
+
+    <textarea name="wikitext" id="wiki__text" */?>
     </div>
   </form>
   </div>
 <?php
-}
+?><?php /*W3*/ }
 
 /**
  * Adds a checkbox for minor edits for logged in users
@@ -1270,21 +1377,33 @@ function html_resendpwd() {
   print p_locale_xhtml('resendpwd');
 ?>
   <div class="centeralign">
-  <form id="dw__resendpwd" action="<?php echo wl($ID)?>" accept-charset="<?php echo $lang['encoding']?>" method="post">
+  <form id="dw__resendpwd" action="<?php /*T   <div class="centeralign">
+  <form id="dw__resendpwd" action="*/echo wl($ID)?><?php /*W3*/ ?>" accept-charset="<?php echo $lang['encoding']/*T " accept-charset="*/?>" method="post">
     <fieldset>
       <br />
-      <legend><?php echo $lang['resendpwd']?></legend>
+      <legend><?php ?><?php /*W3*/ echo $lang['resendpwd']?></legend>
       <input type="hidden" name="do" value="resendpwd" />
       <input type="hidden" name="save" value="1" />
       <label class="block">
-        <span><?php echo $lang['user']?></span>
-        <input type="text" name="login" value="<?php echo formText($_POST['login'])?>" class="edit" /><br /><br />
+        <span><?php /*T " method="post">
+    <fieldset>
+      <br />
+      <legend>*/?><?php /*W3*/ echo $lang['user']?></span>
+        <input type="text" name="login" value="<?php /*T </legend>
+      <input type="hidden" name="do" value="resendpwd" />
+      <input type="hidden" name="save" value="1" />
+      <label class="block">
+        <span>*/echo formText($_POST['login'])?><?php /*W3*/ ?>" class="edit" /><br /><br />
       </label><br />
-      <input type="submit" value="<?php echo $lang['btn_resendpwd']?>" class="button" />
+      <input type="submit" value="<?php echo $lang['btn_resendpwd']/*T </span>
+        <input type="text" name="login" value="*/?>" class="button" />
     </fieldset>
   </form>
   </div>
 <?php
-}
+?><?php /*W3*/ }
+
+//Setup VIM: ex: et ts=2 enc=utf-8 :
+
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :

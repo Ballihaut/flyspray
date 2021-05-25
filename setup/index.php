@@ -74,20 +74,20 @@ define('APPLICATION_SETUP_INDEX', Flyspray::absoluteURI());
 
 class Setup extends Flyspray
 {
-   public $mPhpRequired;
-   public $mSupportedDatabases;
-   public $mAvailableDatabases;
+   public string $mPhpRequired;
+   public array $mSupportedDatabases;
+   public array $mAvailableDatabases;
 
-   public $mProceed;
+   public bool $mProceed;
    public $mPhpVersionStatus;
-   public $mDatabaseStatus;
-   public $xmlStatus;
-   public $mConfigText;
+   public bool $mDatabaseStatus;
+   public bool $xmlStatus;
+   public string $mConfigText;
    public $mHtaccessText;
    public $mWriteStatus;
 
    public $mDbConnection;
-   public $mProductName;
+   public string $mProductName;
 
    /**
     * @var string To store the data filter type
@@ -102,7 +102,7 @@ class Setup extends Flyspray
    public $mCommentsTable;
 
    public $mServerSoftware;
-   public $mMinPasswordLength;
+   public int $mMinPasswordLength;
    public $mAdminUsername;
    public $mAdminPassword;
    /**
@@ -486,7 +486,7 @@ class Setup extends Flyspray
    * @param string $option The ini setting name to check the status for
    * @return string The status of the setting either "On" or "OFF"
    */
-   public function getIniSetting($option)
+   public function getIniSetting(string $option)
    {
       return (ini_get($option) == '1' ? L('on') : L('off'));
    }
@@ -500,7 +500,7 @@ class Setup extends Flyspray
    * @return string $message The message which needs outputting
    */
    public function getPageMessage()
-   {
+   : string {
       // If there is an error
       if (isset($_SESSION['page_message']) || isset($_SESSION['page_heading']))
       {
@@ -536,7 +536,7 @@ class Setup extends Flyspray
    * @return string $value The value to be returned
    */
    public function getParamValue(&$arr, $name, $default=null )
-   {
+   : string {
       $value = isset($arr[$name]) ? $arr[$name] : $default;
       return $value;
    }
@@ -596,8 +596,8 @@ class Setup extends Flyspray
    * @param string $fileSystem Path to check
    * $return boolean true/false
    */
-   public function isWriteable($fileSystem)
-   {
+   public function isWriteable(string $fileSystem)
+   : bool {
       // Clear the cache
       clearstatcache();
 
@@ -610,7 +610,7 @@ class Setup extends Flyspray
    * @param array() $list_array An array list of data to be made into a list.
    * @return string $list An HTML list
    */
-   public function outputHtmlList($list_array = array(), $list_type = 'ul')
+   public function outputHtmlList(array $list_array = array(), string $list_type = 'ul')
    {
       $list = "<$list_type>";
       foreach ($list_array as $list_item)
@@ -714,7 +714,7 @@ class Setup extends Flyspray
 
 
    public function processAdminConfig($data)
-   {
+   : bool {
       // Extract the variables to local namespace
       extract($data);
 
@@ -869,7 +869,7 @@ class Setup extends Flyspray
 
 
    public function processDatabaseSetup($data)
-   {
+   : bool {
       require_once $this->mAdodbPath;
 
       // Perform a number of fatality checks, then die gracefully
@@ -1003,8 +1003,8 @@ class Setup extends Flyspray
    * @return boolean
    */
 
-   public function populateDb($data)
-   {
+   public function populateDb(array $data)
+   : bool {
       // Check available upgrade scripts, use the script of very latest  version
       $folders = glob_compat(BASEDIR . '/upgrade/[0-9]*');
       usort($folders, 'version_compare'); // start with lowest version
@@ -1096,8 +1096,8 @@ class Setup extends Flyspray
    * @param string $type The type of html format to return
    * @return string Depending on the type of format to return
    */
-   public static function returnStatus($boolean, $type = 'yes')
-   {
+   public static function returnStatus($boolean, string $type = 'yes')
+   : bool {
       // Do a switch on the type of status
       switch($type)
       {
@@ -1150,8 +1150,8 @@ class Setup extends Flyspray
       *
       * @return The result of the check.
       */
-   public function trimArgs($arg)
-   {
+   public function trimArgs(string $arg)
+   : int {
       return strlen(trim($arg));
    }
 
@@ -1196,7 +1196,7 @@ class Setup extends Flyspray
    * @param array $templates The collection of templates with their associated variables
    *
    */
-   public function outputPage($templates = array())
+   public function outputPage(array $templates = array())
    {
       if (sizeof($templates) == 0)
       {

@@ -9,7 +9,7 @@ FlySprayI18N::init('en', $language);
 FlySprayI18N::setDefault($language);
 
 class FlySprayI18N {
-    private static $translations = array();
+    private static array $translations = array();
 
     public static function init($lang, $translation) {
         self::$translations[$lang] = $translation;
@@ -19,7 +19,7 @@ class FlySprayI18N {
         self::$translations['default'] = $translation;
     }
 
-    public static function L($key, $lang = null) {
+    public static function L($key, $lang = null) : string {
         if (!isset($lang) || empty($lang) || !is_string($lang)) {
             $lang = 'default';
         }

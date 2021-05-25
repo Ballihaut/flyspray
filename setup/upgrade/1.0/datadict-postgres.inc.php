@@ -17,16 +17,16 @@ if (!defined('ADODB_DIR')) die();
 
 class ADODB2_postgres extends ADODB_DataDict {
 
-	var $databaseType = 'postgres';
-	var $seqField = false;
-	var $seqPrefix = 'SEQ_';
-	var $addCol = ' ADD COLUMN';
-	var $quote = '"';
-	var $renameTable = 'ALTER TABLE %s RENAME TO %s'; // at least since 7.1
-	var $dropTable = 'DROP TABLE %s CASCADE';
+	var string $databaseType = 'postgres';
+	var bool $seqField = false;
+	var string $seqPrefix = 'SEQ_';
+	var string $addCol = ' ADD COLUMN';
+	var string $quote = '"';
+	var string $renameTable = 'ALTER TABLE %s RENAME TO %s'; // at least since 7.1
+	var string $dropTable = 'DROP TABLE %s CASCADE';
 
-	function metaType($t,$len=-1,$fieldobj=false)
-	{
+	function metaType($t,int $len=-1,$fieldobj=false)
+	: string {
 		if (is_object($t)) {
 			$fieldobj = $t;
 			$t = $fieldobj->type;
@@ -90,7 +90,7 @@ class ADODB2_postgres extends ADODB_DataDict {
 	}
 
  	function actualType($meta)
-	{
+	: string {
 		switch($meta) {
 		case 'C': return 'VARCHAR';
 		case 'XL':
@@ -128,7 +128,7 @@ class ADODB2_postgres extends ADODB_DataDict {
 	 * @param string $flds column-names and types for the changed columns
 	 * @return array with SQL strings
 	 */
-	function addColumnSQL($tabname, $flds)
+	function addColumnSQL(string $tabname, $flds)
 	{
 		$tabname = $this->tableName($tabname);
 		$sql = array();
@@ -170,7 +170,7 @@ class ADODB2_postgres extends ADODB_DataDict {
 
 
 	function dropIndexSQL ($idxname, $tabname = NULL)
-	{
+	: array {
 	   return array(sprintf($this->dropIndex, $this->tableName($idxname), $this->tableName($tabname)));
 	}
 
@@ -195,8 +195,8 @@ class ADODB2_postgres extends ADODB_DataDict {
 		return $this->_recreate_copy_table($tabname,False,$tableflds,$tableoptions);
 	}*/
 
-	function alterColumnSQL($tabname, $flds, $tableflds='',$tableoptions='')
-	{
+	function alterColumnSQL(string $tabname, $flds, string $tableflds='',string $tableoptions='')
+	: array {
 		// Check if alter single column datatype available - works with 8.0+
 		$has_alter_column = 8.0 <= (float) @$this->serverInfo['version'];
 
@@ -301,8 +301,8 @@ class ADODB2_postgres extends ADODB_DataDict {
 	 * @param array/ $tableoptions options for the new table see CreateTableSQL, default ''
 	 * @return array with SQL strings
 	 */
-	function dropColumnSQL($tabname, $flds, $tableflds='',$tableoptions='')
-	{
+	function dropColumnSQL($tabname, $flds, string $tableflds='',string $tableoptions='')
+	: array {
 		$has_drop_column = 7.3 <= (float) @$this->serverInfo['version'];
 		if (!$has_drop_column && !$tableflds) {
 			if ($this->debug) ADOConnection::outp("DropColumnSQL needs complete table-definiton for PostgreSQL < 7.3");
@@ -326,7 +326,7 @@ class ADODB2_postgres extends ADODB_DataDict {
 	 * @param array/string $tableoptions options for the new table see CreateTableSQL, default ''
 	 * @return array with SQL strings
 	 */
-	function _recreate_copy_table($tabname,$dropflds,$tableflds,$tableoptions='')
+	function _recreate_copy_table(string $tabname,$dropflds,string $tableflds,string $tableoptions='')
 	{
 		if ($dropflds && !is_array($dropflds)) $dropflds = explode(',',$dropflds);
 		$copyflds = array();
@@ -383,8 +383,8 @@ class ADODB2_postgres extends ADODB_DataDict {
 	}
 
 	// return string must begin with space
-	function _createSuffix($fname, &$ftype, $fnotnull,$fdefault,$fautoinc,$fconstraint,$funsigned)
-	{
+	function _createSuffix($fname, &$ftype, $fnotnull,string $fdefault,$fautoinc,string $fconstraint,$funsigned)
+	: string {
 		if ($fautoinc) {
 			$ftype = 'SERIAL';
 			return '';
@@ -399,7 +399,7 @@ class ADODB2_postgres extends ADODB_DataDict {
 	// search for a sequece for the given table (asumes the seqence-name contains the table-name!)
 	// if yes return sql to drop it
 	// this is still necessary if postgres < 7.3 or the SERIAL was created on an earlier version!!!
-	function _dropAutoIncrement($tabname)
+	function _dropAutoIncrement(string $tabname)
 	{
 		$tabname = $this->connection->quote('%'.$tabname.'%');
 
@@ -413,7 +413,7 @@ class ADODB2_postgres extends ADODB_DataDict {
 	}
 
 	function renameTableSQL($tabname,$newname)
-	{
+	: array {
 		if (!empty($this->schema)) {
 			$rename_from = $this->tableName($tabname);
 			$schema_save = $this->schema;
@@ -459,7 +459,7 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 [ USING acc_method ] ( func_name( column [, ... ]) [ ops_name ] )
 [ WHERE predicate ]
 	*/
-	function _indexSQL($idxname, $tabname, $flds, $idxoptions)
+	function _indexSQL($idxname, string $tabname, $flds, $idxoptions)
 	{
 		$sql = array();
 
@@ -491,7 +491,7 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 		return $sql;
 	}
 
-	function _getSize($ftype, $ty, $fsize, $fprec)
+	function _getSize(string $ftype, bool $ty, string $fsize, string $fprec)
 	{
 		if (strlen($fsize) && $ty != 'X' && $ty != 'B' && $ty  != 'I' && strpos($ftype,'(') === false) {
 			$ftype .= "(".$fsize;
@@ -507,7 +507,7 @@ CREATE [ UNIQUE ] INDEX index_name ON table
 	This function changes/adds new fields to your table. You don't
 	have to know if the col is new or not. It will check on its own.
 	*/
-	function changeTableSQL($tablename, $flds, $tableoptions = false, $dropOldFlds=false)
+	function changeTableSQL($tablename, $flds, bool $tableoptions = false, bool $dropOldFlds=false)
 	{
 	global $ADODB_FETCH_MODE;
 

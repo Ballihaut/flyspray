@@ -18,7 +18,7 @@
 class Notifications {
 
    // {{{ Wrapper function for all others
-   function create($type, $task_id, $info = null, $to = null, $ntype = NOTIFY_BOTH, $proj_lang = null) {
+   function create($type, $task_id, $info = null, $to = null, $ntype = NOTIFY_BOTH, $proj_lang = null) : bool {
 	global $fs;
 	
         if (is_null($to)) {
@@ -114,7 +114,7 @@ class Notifications {
         // End of Create() function
     }
 
-   function storeOnline($to, $subject, $body, $online, $task_id = null) {
+   function storeOnline($to, $subject, $body, $online, $task_id = null) : bool {
 	global $db, $fs;
 
 	if (!count($to)) {
@@ -169,7 +169,7 @@ class Notifications {
       return $db->fetchAllArray($notifications);
    }
 
-	static function NotificationsHaveBeenRead($ids) {
+	static function NotificationsHaveBeenRead(array $ids) {
 		global $db, $fs, $user;
 
 		$readones = join(",", array_map('intval', $ids));
@@ -187,7 +187,7 @@ class Notifications {
 
    // {{{ Store Jabber messages for sending later
    function storeJabber( $to, $subject, $body )
-   {
+   : bool {
       global $db, $fs;
 
       if (empty($fs->prefs['jabber_server'])
@@ -247,7 +247,7 @@ class Notifications {
    } // }}}
 
    static function jabberRequestAuth($email)
-   {
+   : bool {
         global $fs;
 
         include_once BASEDIR . '/includes/class.jabber2.php';
@@ -270,7 +270,7 @@ class Notifications {
 
    // {{{ send Jabber messages that were stored earlier
    function sendJabber()
-   {
+   : bool {
       global $db, $fs;
 
       include_once BASEDIR . '/includes/class.jabber2.php';
@@ -928,7 +928,7 @@ class Notifications {
         return array(Notifications::fixMsgData($subject), Notifications::fixMsgData($body), $online);
     }
 
-    public static function assignRecipients($recipients, &$emails, &$jabbers, &$onlines, $ignoretype = false) {
+    public static function assignRecipients($recipients, &$emails, &$jabbers, &$onlines, bool $ignoretype = false) : bool {
         global $db, $fs, $user;
 
         if (!is_array($recipients)) {
@@ -960,7 +960,7 @@ class Notifications {
     }
 
     // {{{ Create an address list for specific users
-   function specificAddresses($users, $ignoretype = false) {
+   function specificAddresses($users, bool $ignoretype = false) : array {
         global $db, $fs, $user;
 
         $emails = array();
@@ -988,7 +988,7 @@ class Notifications {
 // }}}
 
 	// {{{ Create a standard address list of users (assignees, notif tab and proj addresses)
-	function address($task_id, $type) {
+	function address($task_id, $type) : array {
 		global $db, $fs, $proj, $user;
 
 		$users = array();

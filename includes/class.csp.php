@@ -20,7 +20,7 @@
 class ContentSecurityPolicy {
 
 	#private $csp=array();
-	public $csp=array();
+	public array $csp=array();
 
 	# for debugging just to track which extension/plugins wants to add csp-entries
 	#public $history=array();
@@ -38,7 +38,7 @@ class ContentSecurityPolicy {
 	* Alternatively the user can just access the currently public $csp->csp['img-src'] to get that values as array.
 	*
 	*/
-	public function get(){
+	public function get(): string {
 		$out = '';
 		foreach ( $this->csp as $key => $values ) {
 			$out .= $key.' '.implode(' ', $values).'; ';
@@ -90,7 +90,7 @@ class ContentSecurityPolicy {
 	* I don't know, maybe this way the csp persist if someone saves a page to his harddrive for instance or if bad web proxies rip off csp http headers?
 	* Do webbrowsers store the CSP-HTTP header to the HTML-head as metatags automatically if there is no related metatag in the original page? Mhh..
 	*/
-	public function getMeta() {
+	public function getMeta() : string {
 		$string=$this->get();
 		$out= '<meta http-equiv="Content-Security-Policy" content="'.$string.'">';
 		# enable if you think it is necessary for your customers.

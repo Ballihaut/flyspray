@@ -19,7 +19,7 @@ class syntax_plugin_fslink extends DokuWiki_Syntax_Plugin {
     /**
      * return some info
      */
-    function getInfo(){
+    function getInfo(): array {
         return array(
             'author' => 'Florian Schmitz',
             'email'  => 'floele@gmail.com',
@@ -33,14 +33,14 @@ class syntax_plugin_fslink extends DokuWiki_Syntax_Plugin {
     /**
      * What kind of syntax are we?
      */
-    function getType(){
+    function getType(): string {
         return 'substition';
     }
  
     /**
      * Where to sort in?
      */
-    function getSort(){
+    function getSort(): int {
         return 301;
     }
  
@@ -57,14 +57,14 @@ class syntax_plugin_fslink extends DokuWiki_Syntax_Plugin {
     /**
      * Handle the match
      */
-    function handle($match, $state, $pos, &$handler){
+    function handle($match, $state, $pos, &$handler): array {
         return array($match, $state);
     }            
  
     /**
      * Create output
      */
-    function render($mode, &$renderer, $data) {
+    function render($mode, &$renderer, $data) : bool {
         if($mode == 'xhtml'){
             $fsid = explode('#', $data[0]);
             if(count($fsid) < 2) {

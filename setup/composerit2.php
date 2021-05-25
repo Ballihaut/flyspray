@@ -9,8 +9,8 @@ define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 
 require_once OBJECTS_PATH.'/i18n.inc.php';
-class user{var $infos=array();};
-class project{var $id=0;};
+class user{var array $infos=array();};
+class project{var int $id=0;};
 $user = new user;
 $proj = new project;
 load_translations();
@@ -31,7 +31,15 @@ header("Pragma: no-cache");
 	</head>
 	<body style="padding:2em;"><img src="../flyspray.png" style="display:block;margin:auto;">
 	<?php
-		if (ini_get('safe_mode') == 1) {
+		/*T <!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<title>Flyspray Install - Third Party Packages needed - Step 3</title>
+		<link media="screen" href="../themes/CleanFS/theme.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body style="padding:2em;"><img src="../flyspray.png" style="display:block;margin:auto;">
+	*/if (ini_get('safe_mode') == 1) {
 			echo '
 				<h3>PHP safe_mode is enabled. We currently don\'t know how to run  the "php composer.phar install" from php web frontend under this circumstances.</h3>
 				<h3>But lets test if we can workaround it with Perl:</h3>
@@ -73,6 +81,6 @@ header("Pragma: no-cache");
 			echo 'Cleanup made<br /><br />';
 			echo '<a href="./index.php" class="button">Go back</a>';
 		}
-	?>
+	?><?php /*W3*/ ?>
 	</body>
 </html>

@@ -41,7 +41,7 @@ class effort
      * @param $effort_to_add int amount of effort in hh:mm to add to effort table.
      */
     public function addEffort($effort_to_add, $proj)
-    {
+    : bool {
         global $db;
 
         # note: third parameter seem useless, not used by EditStringToSeconds().., maybe drop it..
@@ -71,7 +71,7 @@ class effort
      * @return bool Returns Success or Failure of the action.
      */
     public function startTracking()
-    {
+    : bool {
         global $db;
 
         //check if the user is already tracking time against this task.
@@ -139,7 +139,7 @@ class effort
         $this->details = $db->query('SELECT * FROM {effort} WHERE task_id ='.$this->_task_id.';');
     }
     
-    public static function secondsToString($seconds, $factor, $format) {
+    public static function secondsToString(int $seconds, int $factor, $format) : string {
         if ($seconds == 0) {
             return '';
         }
@@ -231,7 +231,7 @@ class effort
         }
     }
 
-    public static function secondsToEditString($seconds, $factor, $format) {
+    public static function secondsToEditString(int $seconds, int $factor, $format) : string {
         $factor = ($factor == 0 ? 86400 : $factor);
 
         // Adjust seconds to be evenly dividable by 60, so
@@ -272,7 +272,7 @@ class effort
         }
     }
 
-    public static function editStringToSeconds($string, $factor, $format) {
+    public static function editStringToSeconds(string $string, int $factor, $format) {
         if (!isset($string) || empty($string)) {
             return 0;
         }

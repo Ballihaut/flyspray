@@ -7,16 +7,16 @@ class Doku_Handler {
 
     var $CallWriter = NULL;
 
-    var $calls = array();
+    var array $calls = array();
 
-    var $status = array(
+    var array $status = array(
         'section' => FALSE,
         'section_edit_start' => -1,
         'section_edit_level' => 1,
         'section_edit_title' => ''
     );
 
-    var $rewriteBlocks = TRUE;
+    var bool $rewriteBlocks = TRUE;
 
     function __construct() {
         $this->CallWriter = new Doku_Handler_CallWriter($this);
@@ -52,7 +52,7 @@ class Doku_Handler {
         array_push($this->calls,array('document_end',array(),$last_call[2]));
     }
 
-    function fetch() {
+    function fetch() : bool {
         $call = each($this->calls);
         if ( $call ) {
             return $call['value'];
@@ -69,7 +69,7 @@ class Doku_Handler {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function plugin($match, $state, $pos, $pluginname){
+    function plugin($match, $state, $pos, $pluginname): bool {
         $data = array($match);
         $plugin =& plugin_load('syntax',$pluginname);
         if($plugin != null){
@@ -79,7 +79,7 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function base($match, $state, $pos) {
+    function base($match, $state, $pos) : bool {
         switch ( $state ) {
             case DOKU_LEXER_UNMATCHED:
                 $this->_addCall('cdata',array($match), $pos);
@@ -89,7 +89,7 @@ class Doku_Handler {
         }
     }
 
-    function header($match, $state, $pos) {
+    function header(string $match, $state, int $pos) : bool {
         global $conf;
 
         // get level and title
@@ -115,32 +115,32 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function notoc($match, $state, $pos) {
+    function notoc($match, $state, $pos) : bool {
         $this->_addCall('notoc',array(),$pos);
         return TRUE;
     }
 
-    function nocache($match, $state, $pos) {
+    function nocache($match, $state, $pos) : bool {
         $this->_addCall('nocache',array(),$pos);
         return TRUE;
     }
 
-    function linebreak($match, $state, $pos) {
+    function linebreak($match, $state, $pos) : bool {
         $this->_addCall('linebreak',array(),$pos);
         return TRUE;
     }
 
-    function eol($match, $state, $pos) {
+    function eol($match, $state, $pos) : bool {
         $this->_addCall('eol',array(),$pos);
         return TRUE;
     }
 
-    function hr($match, $state, $pos) {
+    function hr($match, $state, $pos) : bool {
         $this->_addCall('hr',array(),$pos);
         return TRUE;
     }
 
-    function _nestingTag($match, $state, $pos, $name) {
+    function _nestingTag($match, $state, $pos, string $name) {
         switch ( $state ) {
             case DOKU_LEXER_ENTER:
                 $this->_addCall($name.'_open', array(), $pos);
@@ -154,43 +154,43 @@ class Doku_Handler {
         }
     }
 
-    function strong($match, $state, $pos) {
+    function strong($match, $state, $pos) : bool {
         $this->_nestingTag($match, $state, $pos, 'strong');
         return TRUE;
     }
 
-    function emphasis($match, $state, $pos) {
+    function emphasis($match, $state, $pos) : bool {
         $this->_nestingTag($match, $state, $pos, 'emphasis');
         return TRUE;
     }
 
-    function underline($match, $state, $pos) {
+    function underline($match, $state, $pos) : bool {
         $this->_nestingTag($match, $state, $pos, 'underline');
         return TRUE;
     }
 
-    function monospace($match, $state, $pos) {
+    function monospace($match, $state, $pos) : bool {
         $this->_nestingTag($match, $state, $pos, 'monospace');
         return TRUE;
     }
 
-    function subscript($match, $state, $pos) {
+    function subscript($match, $state, $pos) : bool {
         $this->_nestingTag($match, $state, $pos, 'subscript');
         return TRUE;
     }
 
-    function superscript($match, $state, $pos) {
+    function superscript($match, $state, $pos) : bool {
         $this->_nestingTag($match, $state, $pos, 'superscript');
         return TRUE;
     }
 
-    function deleted($match, $state, $pos) {
+    function deleted($match, $state, $pos) : bool {
         $this->_nestingTag($match, $state, $pos, 'deleted');
         return TRUE;
     }
 
 
-    function footnote($match, $state, $pos) {
+    function footnote($match, $state, $pos) : bool {
 //        $this->_nestingTag($match, $state, $pos, 'footnote');
         if (!isset($this->_footnote)) $this->_footnote = false;
 
@@ -230,7 +230,7 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function listblock($match, $state, $pos) {
+    function listblock($match, $state, $pos) : bool {
         switch ( $state ) {
             case DOKU_LEXER_ENTER:
                 $ReWriter = new Doku_Handler_List($this->CallWriter);
@@ -253,14 +253,14 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function unformatted($match, $state, $pos) {
+    function unformatted($match, $state, $pos) : bool {
         if ( $state == DOKU_LEXER_UNMATCHED ) {
             $this->_addCall('unformatted',array($match), $pos);
         }
         return TRUE;
     }
 
-    function php($match, $state, $pos) {
+    function php($match, $state, $pos) : bool {
         global $conf;
         if ( $state == DOKU_LEXER_UNMATCHED ) {
             if ($conf['phpok']) {
@@ -272,7 +272,7 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function html($match, $state, $pos) {
+    function html($match, $state, $pos) : bool {
         global $conf;
         if ( $state == DOKU_LEXER_UNMATCHED ) {
             if($conf['htmlok']){
@@ -284,7 +284,7 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function preformatted($match, $state, $pos) {
+    function preformatted($match, $state, $pos) : bool {
         switch ( $state ) {
             case DOKU_LEXER_ENTER:
                 $ReWriter = new Doku_Handler_Preformatted($this->CallWriter);
@@ -308,14 +308,14 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function file($match, $state, $pos) {
+    function file($match, $state, $pos) : bool {
         if ( $state == DOKU_LEXER_UNMATCHED ) {
             $this->_addCall('file',array($match), $pos);
         }
         return TRUE;
     }
 
-    function quote($match, $state, $pos) {
+    function quote($match, $state, $pos) : bool {
 
         switch ( $state ) {
 
@@ -345,7 +345,7 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function code($match, $state, $pos) {
+    function code(string $match, $state, $pos) : bool {
         switch ( $state ) {
             case DOKU_LEXER_UNMATCHED:
                 $matches = preg_split('/>/u',$match,2);
@@ -366,60 +366,60 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function acronym($match, $state, $pos) {
+    function acronym($match, $state, $pos) : bool {
         $this->_addCall('acronym',array($match), $pos);
         return TRUE;
     }
 
-    function smiley($match, $state, $pos) {
+    function smiley($match, $state, $pos) : bool {
         $this->_addCall('smiley',array($match), $pos);
         return TRUE;
     }
 
-    function wordblock($match, $state, $pos) {
+    function wordblock($match, $state, $pos) : bool {
         $this->_addCall('wordblock',array($match), $pos);
         return TRUE;
     }
 
-    function entity($match, $state, $pos) {
+    function entity($match, $state, $pos) : bool {
         $this->_addCall('entity',array($match), $pos);
         return TRUE;
     }
 
-    function multiplyentity($match, $state, $pos) {
+    function multiplyentity(string $match, $state, $pos) : bool {
         preg_match_all('/\d+/',$match,$matches);
         $this->_addCall('multiplyentity',array($matches[0][0],$matches[0][1]), $pos);
         return TRUE;
     }
 
-    function singlequoteopening($match, $state, $pos) {
+    function singlequoteopening($match, $state, $pos) : bool {
         $this->_addCall('singlequoteopening',array(), $pos);
         return TRUE;
     }
 
-    function singlequoteclosing($match, $state, $pos) {
+    function singlequoteclosing($match, $state, $pos) : bool {
         $this->_addCall('singlequoteclosing',array(), $pos);
         return TRUE;
     }
 
-    function doublequoteopening($match, $state, $pos) {
+    function doublequoteopening($match, $state, $pos) : bool {
         $this->_addCall('doublequoteopening',array(), $pos);
         return TRUE;
     }
 
-    function doublequoteclosing($match, $state, $pos) {
+    function doublequoteclosing($match, $state, $pos) : bool {
         $this->_addCall('doublequoteclosing',array(), $pos);
         return TRUE;
     }
 
-    function camelcaselink($match, $state, $pos) {
+    function camelcaselink($match, $state, $pos) : bool {
         $this->_addCall('camelcaselink',array($match), $pos);
         return TRUE;
     }
 
     /*
     */
-    function internallink($match, $state, $pos) {
+    function internallink($match, $state, $pos) : bool {
         // Strip the opening and closing markup
         $link = preg_replace(array('/^\[\[/','/\]\]$/u'),'',$match);
 
@@ -483,17 +483,17 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function filelink($match, $state, $pos) {
+    function filelink($match, $state, $pos) : bool {
         $this->_addCall('filelink',array($match, NULL), $pos);
         return TRUE;
     }
 
-    function windowssharelink($match, $state, $pos) {
+    function windowssharelink($match, $state, $pos) : bool {
         $this->_addCall('windowssharelink',array($match, NULL), $pos);
         return TRUE;
     }
 
-    function media($match, $state, $pos) {
+    function media($match, $state, $pos) : bool {
         $p = Doku_Handler_Parse_Media($match);
 
         $this->_addCall(
@@ -505,7 +505,7 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function rss($match, $state, $pos) {
+    function rss($match, $state, $pos) : bool {
         $link = preg_replace(array('/^\{\{rss>/','/\}\}$/'),'',$match);
 
         // get params
@@ -533,7 +533,7 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function externallink($match, $state, $pos) {
+    function externallink($match, $state, $pos) : bool {
         // Prevent use of multibyte strings in URLs
         // See: http://www.boingboing.net/2005/02/06/shmoo_group_exploit_.html
         // Not worried about other charsets so long as page is output as UTF-8
@@ -546,13 +546,13 @@ class Doku_Handler {
         return TRUE;
     }
 
-    function emaillink($match, $state, $pos) {
+    function emaillink($match, $state, $pos) : bool {
         $email = preg_replace(array('/^</','/>$/'),'',$match);
         $this->_addCall('emaillink',array($email, NULL), $pos);
         return TRUE;
     }
 
-    function table($match, $state, $pos) {
+    function table(string $match, $state, $pos) : bool {
         switch ( $state ) {
 
             case DOKU_LEXER_ENTER:
@@ -607,7 +607,7 @@ class Doku_Handler {
 }
 
 //------------------------------------------------------------------------
-function Doku_Handler_Parse_Media($match) {
+function Doku_Handler_Parse_Media($match) : array {
 
     // Strip the opening and closing markup
     $link = preg_replace(array('/^\{\{/','/\}\}$/u'),'',$match);
@@ -708,7 +708,7 @@ class Doku_Handler_CallWriter {
         $this->Handler->calls[] = $call;
     }
 
-    function writeCalls($calls) {
+    function writeCalls(array $calls) {
         $this->Handler->calls = array_merge($this->Handler->calls, $calls);
     }
 
@@ -728,9 +728,9 @@ class Doku_Handler_CallWriter {
 class Doku_Handler_Nest {
 
     var $CallWriter;
-    var $calls = array();
+    var array $calls = array();
 
-    var $closingInstruction;
+    var string $closingInstruction;
 
     /**
      * constructor
@@ -749,7 +749,7 @@ class Doku_Handler_Nest {
         $this->calls[] = $call;
     }
 
-    function writeCalls($calls) {
+    function writeCalls(array $calls) {
         $this->calls = array_merge($this->calls, $calls);
     }
 
@@ -771,9 +771,9 @@ class Doku_Handler_List {
 
     var $CallWriter;
 
-    var $calls = array();
-    var $listCalls = array();
-    var $listStack = array();
+    var array $calls = array();
+    var array $listCalls = array();
+    var array $listStack = array();
 
     function __construct(& $CallWriter) {
         $this->CallWriter = & $CallWriter;
@@ -784,7 +784,7 @@ class Doku_Handler_List {
     }
 
     // Probably not needed but just in case...
-    function writeCalls($calls) {
+    function writeCalls(array $calls) {
         $this->calls = array_merge($this->calls, $calls);
 #        $this->CallWriter->writeCalls($this->calls);
     }
@@ -949,7 +949,7 @@ class Doku_Handler_List {
     }
 
     //------------------------------------------------------------------------
-    function interpretSyntax($match, & $type) {
+    function interpretSyntax($match, & $type) : int {
         if ( substr($match,-1) == '*' ) {
             $type = 'u';
         } else {
@@ -964,9 +964,9 @@ class Doku_Handler_Preformatted {
 
     var $CallWriter;
 
-    var $calls = array();
+    var array $calls = array();
     var $pos;
-    var $text ='';
+    var string $text ='';
 
 
 
@@ -979,7 +979,7 @@ class Doku_Handler_Preformatted {
     }
 
     // Probably not needed but just in case...
-    function writeCalls($calls) {
+    function writeCalls(array $calls) {
         $this->calls = array_merge($this->calls, $calls);
 #        $this->CallWriter->writeCalls($this->calls);
     }
@@ -1018,9 +1018,9 @@ class Doku_Handler_Quote {
 
     var $CallWriter;
 
-    var $calls = array();
+    var array $calls = array();
 
-    var $quoteCalls = array();
+    var array $quoteCalls = array();
 
     function __construct(& $CallWriter) {
         $this->CallWriter = & $CallWriter;
@@ -1031,7 +1031,7 @@ class Doku_Handler_Quote {
     }
 
     // Probably not needed but just in case...
-    function writeCalls($calls) {
+    function writeCalls(array $calls) {
         $this->calls = array_merge($this->calls, $calls);
 #        $this->CallWriter->writeCalls($this->calls);
     }
@@ -1098,7 +1098,7 @@ class Doku_Handler_Quote {
         }
     }
 
-    function getDepth($marker) {
+    function getDepth(string $marker) : int {
         preg_match('/>{1,}/', $marker, $matches);
         $quoteLength = strlen($matches[0]);
         return $quoteLength;
@@ -1110,13 +1110,13 @@ class Doku_Handler_Table {
 
     var $CallWriter;
 
-    var $calls = array();
-    var $tableCalls = array();
-    var $maxCols = 0;
-    var $maxRows = 1;
-    var $currentCols = 0;
+    var array $calls = array();
+    var array $tableCalls = array();
+    var int $maxCols = 0;
+    var int $maxRows = 1;
+    var int $currentCols = 0;
     var $firstCell = FALSE;
-    var $lastCellType = 'tablecell';
+    var string $lastCellType = 'tablecell';
 
     function __construct(& $CallWriter) {
         $this->CallWriter = & $CallWriter;
@@ -1127,7 +1127,7 @@ class Doku_Handler_Table {
     }
 
     // Probably not needed but just in case...
-    function writeCalls($calls) {
+    function writeCalls(array $calls) {
         $this->calls = array_merge($this->calls, $calls);
 #        $this->CallWriter->writeCalls($this->calls);
     }
@@ -1341,7 +1341,7 @@ class Doku_Handler_Table {
 //------------------------------------------------------------------------
 class Doku_Handler_Section {
 
-    function process($calls) {
+    function process(iterable $calls) : array {
 
         $sectionCalls = array();
         $inSection = FALSE;
@@ -1385,16 +1385,16 @@ class Doku_Handler_Section {
  */
 class Doku_Handler_Block {
 
-    var $calls = array();
+    var array $calls = array();
 
-    var $blockStack = array();
+    var array $blockStack = array();
 
-    var $inParagraph = FALSE;
+    var bool $inParagraph = FALSE;
     var $atStart = TRUE;
-    var $skipEolKey = -1;
+    var int $skipEolKey = -1;
 
     // Blocks these should not be inside paragraphs
-    var $blockOpen = array(
+    var array $blockOpen = array(
             'header',
             'listu_open','listo_open','listitem_open','listcontent_open',
             'table_open','tablerow_open','tablecell_open','tableheader_open',
@@ -1403,7 +1403,7 @@ class Doku_Handler_Block {
             'code','file','hr','preformatted','rss',
         );
 
-    var $blockClose = array(
+    var array $blockClose = array(
             'header',
             'listu_close','listo_close','listitem_close','listcontent_close',
             'table_close','tablerow_close','tablecell_close','tableheader_close',
@@ -1413,11 +1413,11 @@ class Doku_Handler_Block {
         );
 
     // Stacks can contain paragraphs
-    var $stackOpen = array(
+    var array $stackOpen = array(
         'footnote_open','section_open',
         );
 
-    var $stackClose = array(
+    var array $stackClose = array(
         'footnote_close','section_close',
         );
 
@@ -1637,7 +1637,7 @@ class Doku_Handler_Block {
         return $this->calls;
     }
 
-    function addToStack($newStart = TRUE) {
+    function addToStack(bool $newStart = TRUE) {
         $this->blockStack[] = array($this->atStart, $this->inParagraph);
         $this->atStart = $newStart;
         $this->inParagraph = FALSE;

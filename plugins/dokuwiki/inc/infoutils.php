@@ -48,7 +48,7 @@ function checkUpdateMessages(){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function getVersion(){
+function getVersion(): string {
   //import version string
   if(@file_exists('VERSION')){
     //official release
@@ -196,7 +196,7 @@ function check(){
  * @author Andreas Gohr <andi@splitbrain.org>
  * @see    html_msgarea
  */
-function msg($message,$lvl=0,$line='',$file=''){
+function msg(string $message,$lvl=0,$line='',$file=''){
   global $MSG;
   $errors[-1] = 'error';
   $errors[0]  = 'info';
@@ -226,7 +226,7 @@ function msg($message,$lvl=0,$line='',$file=''){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function dbg($msg,$hidden=false){
+function dbg($msg,bool $hidden=false){
   (!$hidden) ? print '<pre class="dbg">' : print "<!--\n";
   print_r($msg);
   (!$hidden) ? print '</pre>' : print "\n-->";
@@ -237,7 +237,7 @@ function dbg($msg,$hidden=false){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function dbglog($msg){
+function dbglog(string $msg){
   global $conf;
   $file = $conf['cachedir'].'/debug.log';
   $fh = fopen($file,'a');

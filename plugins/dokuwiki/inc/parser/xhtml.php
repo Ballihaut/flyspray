@@ -28,22 +28,22 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
 
     // @access public
     var $doc = '';        // will contain the whole document
-    var $toc = array();   // will contain the Table of Contents
+    var array $toc = array();   // will contain the Table of Contents
 
 
-    var $headers = array();
+    var array $headers = array();
 
-    var $footnotes = array();
+    var array $footnotes = array();
 
-    var $acronyms = array();
-    var $smileys = array();
-    var $badwords = array();
-    var $entities = array();
-    var $interwiki = array();
+    var array $acronyms = array();
+    var array $smileys = array();
+    var array $badwords = array();
+    var array $entities = array();
+    var array $interwiki = array();
 
-    var $lastsec = 0;
+    var int $lastsec = 0;
 
-    var $store = '';
+    var string $store = '';
 
     function document_start() {
         //reset some internals
@@ -100,7 +100,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function render_TOC(){
+    function render_TOC(): string {
         if(count($this->toc) < 3) return '';
         global $lang;
         $out  = '<div class="toc">'.DOKU_LF;
@@ -116,7 +116,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
     /**
      * Callback for html_buildlist
      */
-    function _tocitem($item){
+    function _tocitem($item): string {
         return '<span class="li"><a href="#'.$item['hid'].'" class="toc">'.
                $this->_xmlEntities($item['title']).'</a></span>';
     }
@@ -392,7 +392,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
     }
     
-    function geshi_cached($text = '') {
+    function geshi_cached(string $text = '') {
           $this->doc .= $text;
     }
 
@@ -467,7 +467,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
     }
 
 
-    function locallink($hash, $name = NULL){
+    function locallink(string $hash, $name = NULL){
         global $ID;
         $name  = $this->_getLinkTitle($name, $hash, $isImage);
         $hash  = $this->_headerToLink($hash);
@@ -485,7 +485,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function internallink($id, $name = NULL, $search=NULL,$returnonly=false) {
+    function internallink($id, $name = NULL, $search=NULL,$returnonly=false) : string {
         global $conf;
         global $ID;
         // default name is based on $id as given
@@ -928,7 +928,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _formatLink($link){
+    function _formatLink($link): string {
         //make sure the url is XHTML compliant (skip mailto)
         if(substr($link['url'],0,7) != 'mailto:'){
             $link['url'] = str_replace('&','&amp;',$link['url']);
@@ -990,7 +990,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      * @author Andreas Gohr <andi@splitbrain.org>
      */
     function _media ($src, $title=NULL, $align=NULL, $width=NULL,
-                      $height=NULL, $cache=NULL) {
+                      $height=NULL, $cache=NULL) : string {
 
         $ret = '';
 
@@ -1057,7 +1057,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      * @param $string
      * @return string
      */
-    public function _xmlEntities($string) {
+    public function _xmlEntities(string $string) : string {
         return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
     }
 
@@ -1068,7 +1068,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      * @param boolean $create  Create a new unique ID?
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _headerToLink($title,$create=false) {
+    function _headerToLink(string $title,bool $create=false) {
         $title = str_replace(':','',cleanID($title));
         $title = ltrim($title,'0123456789._-');
         if(empty($title)) $title='section';
@@ -1117,7 +1117,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      * @todo Resolve namespace on internal images
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _imageTitle($img) {
+    function _imageTitle($img) : string {
         return $this->_media($img['src'],
                               $img['title'],
                               $img['align'],

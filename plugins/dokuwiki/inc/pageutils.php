@@ -1,13 +1,5 @@
 <?php
 /**
- * Utilities for handling pagenames
- *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Andreas Gohr <andi@splitbrain.org>
- * @todo       Combine similar functions like {wiki,media,meta}FN()
- */
-
-/**
  * Fetch the an ID from request
  *
  * Uses either standard $_REQUEST variable or extracts it from
@@ -18,7 +10,7 @@
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function getID($param='id',$clean=true){
+function getID($param='id',bool $clean=true){
   global $conf;
 
   $id = isset($_REQUEST[$param]) ? $_REQUEST[$param] : null;
@@ -68,7 +60,7 @@ function getID($param='id',$clean=true){
  * @param  string  $raw_id    The pageid to clean
  * @param  boolean $ascii     Force ASCII
  */
-function cleanID($raw_id,$ascii=false){
+function cleanID($raw_id,bool $ascii=false){
   global $conf;
   global $lang;
   static $sepcharpat = null;
@@ -119,7 +111,7 @@ function cleanID($raw_id,$ascii=false){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function getNS($id){
+function getNS(string $id){
   $pos = strrpos($id,':');
   if($pos!==false){
     return substr($id,0,$pos);
@@ -149,7 +141,7 @@ function noNS($id) {
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function wikiFN($raw_id,$rev='',$clean=true){
+function wikiFN($raw_id,$rev='',bool $clean=true){
   global $conf;
 
   global $cache_wikifn;
@@ -190,7 +182,7 @@ function wikiFN($raw_id,$rev='',$clean=true){
  *
  * @author Ben Coburn <btcoburn@silicodon.net>
  */
-function wikiLockFN($id) {
+function wikiLockFN($id) : string {
   global $conf;
   return $conf['lockdir'].'/'.md5(cleanID($id)).'.lock';
 }
@@ -203,7 +195,7 @@ function wikiLockFN($id) {
  *
  * @author Steven Danz <steven-danz@kc.rr.com>
  */
-function metaFN($id,$ext){
+function metaFN($id,string $ext): string {
   global $conf;
   $id = cleanID($id);
   $id = str_replace(':','/',$id);
@@ -216,7 +208,7 @@ function metaFN($id,$ext){
  *
  * @author Esther Brunner <esther@kaffeehaus.ch>
  */
-function metaFiles($id){
+function metaFiles($id): array {
    $name   = noNS($id);
    $dir    = metaFN(getNS($id),'');
    $files  = array();
@@ -239,7 +231,7 @@ function metaFiles($id){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function mediaFN($id){
+function mediaFN($id): string {
   global $conf;
   $id = cleanID($id);
   $id = str_replace(':','/',$id);
@@ -253,7 +245,7 @@ function mediaFN($id){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function localeFN($id){
+function localeFN(string $id): string {
   global $conf;
   $file = DOKU_INC.'inc/lang/'.$conf['lang'].'/'.$id.'.txt';
   if(!@file_exists($file)){
@@ -274,7 +266,7 @@ function localeFN($id){
  *
  * @author <bart at mediawave dot nl>
  */
-function resolve_id($ns,$id,$clean=true){
+function resolve_id($ns,$id,bool $clean=true){
   // if the id starts with a dot we need to handle the
   // relative stuff
   if($id[0] == '.'){
@@ -325,7 +317,7 @@ function resolve_mediaid($ns,&$page,&$exists){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function resolve_pageid($ns,&$page,&$exists){
+function resolve_pageid($ns,string &$page,&$exists){
   global $conf;
   $exists = false;
 
@@ -396,7 +388,7 @@ function resolve_pageid($ns,&$page,&$exists){
  * @param string $ext   This is appended to the filename if given
  * @return string       The filename of the cachefile
  */
-function getCacheName($data,$ext=''){
+function getCacheName(string $data,string $ext=''): string {
   global $conf;
   $md5  = md5($data);
   $file = $conf['cachedir'].'/'.$md5[0].'/'.$md5.$ext;
@@ -409,7 +401,7 @@ function getCacheName($data,$ext=''){
  *
  * @author Andreas Gohr <gohr@cosmocode.de>
  */
-function isHiddenPage($id){
+function isHiddenPage(string $id): bool {
   global $conf;
   if(empty($conf['hidepages'])) return false;
 

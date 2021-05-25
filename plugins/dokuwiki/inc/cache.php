@@ -13,13 +13,13 @@ require_once(DOKU_INC.'inc/pageutils.php');
 require_once(DOKU_INC.'inc/parserutils.php');
 
 class cache {
-  var $key = '';          // primary identifier for this item
+  var string $key = '';          // primary identifier for this item
   var $ext = '';          // file ext for cache data, secondary identifier for this item
-  var $cache = '';        // cache file name
-  var $depends = array(); // array containing cache dependency information,
+  var string $cache = '';        // cache file name
+  var array $depends = array(); // array containing cache dependency information,
                           //   used by _useCache to determine cache validity
 
-  var $_event = '';       // event to be triggered during useCache
+  var string $_event = '';       // event to be triggered during useCache
 
   function __construct($key,$ext) {
     $this->key = $key;
@@ -40,7 +40,7 @@ class cache {
    *
    * @return bool    true if cache can be used, false otherwise
    */
-  function useCache($depends=array()) {
+  function useCache(array $depends=array()) {
     $this->depends = $depends;
     $this->_addDependencies();
 
@@ -97,7 +97,7 @@ class cache {
    * @param   bool   $clean   true to clean line endings, false to leave line endings alone
    * @return  string          cache contents
    */
-  function retrieveCache($clean=true) {
+  function retrieveCache(bool $clean=true) {
     return io_readFile($this->cache, $clean);
   }
 
@@ -162,10 +162,10 @@ class cache {
 
 class cache_parser extends cache {
 
-  var $file = '';       // source file for cache
-  var $mode = '';       // input mode (represents the processing the input file will undergo)
+  var string $file = '';       // source file for cache
+  var string $mode = '';       // input mode (represents the processing the input file will undergo)
 
-  var $_event = 'PARSER_CACHE_USE';
+  var string $_event = 'PARSER_CACHE_USE';
 
   function __construct($id, $file, $mode) {
     if ($id) $this->page = $id;
@@ -214,7 +214,7 @@ class cache_renderer extends cache_parser {
     return $use;
   }
 
-  function _useCache() {
+  function _useCache() : bool {
     global $conf;
 
     if (!parent::_useCache()) return false;

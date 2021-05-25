@@ -25,25 +25,25 @@ define('HTTP_NL',"\r\n");
  */
 class HTTPClient {
     //set these if you like
-    var $agent;         // User agent
-    var $http;          // HTTP version defaults to 1.0
-    var $timeout;       // read timeout (seconds)
-    var $cookies;
-    var $referer;
-    var $max_redirect;
-    var $max_bodysize;  // abort if the response body is bigger than this
-    var $header_regexp; // if set this RE must match against the headers, else abort
-    var $headers;
+    var string $agent;         // User agent
+    var string $http;          // HTTP version defaults to 1.0
+    var int $timeout;       // read timeout (seconds)
+    var array $cookies;
+    var string $referer;
+    var int $max_redirect;
+    var int $max_bodysize;  // abort if the response body is bigger than this
+    var string $header_regexp; // if set this RE must match against the headers, else abort
+    var array $headers;
     var $debug;
 
     // don't set these, read on error
-    var $error;
-    var $redirect_count;
+    var string $error;
+    var int $redirect_count;
 
     // read these after a successful request
     var $resp_status;
-    var $resp_body;
-    var $resp_headers;
+    var string $resp_body;
+    var array $resp_headers;
 
     // set these to do basic authentication
     var $user;
@@ -90,7 +90,7 @@ class HTTPClient {
      * @param  bool   $sloppy304 Return body on 304 not modified
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function get($url,$sloppy304=false){
+    function get($url,bool $sloppy304=false): bool {
         if(!$this->sendRequest($url)) return false;
         if($this->status == 304 && $sloppy304) return $this->resp_body;
         if($this->status != 200) return false;
@@ -104,7 +104,7 @@ class HTTPClient {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function post($url,$data){
+    function post($url,$data): bool {
         if(!$this->sendRequest($url,$data,'POST')) return false;
         if($this->status != 200) return false;
         return $this->resp_body;
@@ -116,7 +116,7 @@ class HTTPClient {
      * @author Andreas Goetz <cpuidle@gmx.de>
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function sendRequest($url,$data=array(),$method='GET'){
+    function sendRequest(string $url,array $data=array(),string $method='GET'): bool {
         $this->error = '';
         $this->status = 0;
 
@@ -323,7 +323,7 @@ class HTTPClient {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _debug($info,$var){
+    function _debug(string $info,$var){
         if(!$this->debug) return;
         print '<b>'.$info.'</b><br />';
         ob_start();
@@ -340,7 +340,7 @@ class HTTPClient {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _parseHeaders($string){
+    function _parseHeaders(string $string): array {
         $headers = array();
         $lines = explode("\n",$string);
         foreach($lines as $line){
@@ -366,7 +366,7 @@ class HTTPClient {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _buildHeaders($headers){
+    function _buildHeaders(iterable $headers): string {
         $string = '';
         foreach($headers as $key => $value){
             if(empty($value)) continue;
@@ -396,7 +396,7 @@ class HTTPClient {
      * @todo handle mixed encoding for file upoads
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _postEncode($data){
+    function _postEncode(iterable $data){
         foreach($data as $key => $val){
             if($url) $url .= '&';
             $url .= $key.'='.urlencode($val);

@@ -1,47 +1,5 @@
 <?php
 /**
- * GeSHi - Generic Syntax Highlighter
- *
- * The GeSHi class for Generic Syntax Highlighting. Please refer to the
- * documentation at http://qbnz.com/highlighter/documentation.php for more
- * information about how to use this class.
- *
- * For changes, release notes, TODOs etc, see the relevant files in the docs/
- * directory.
- *
- *   This file is part of GeSHi.
- *
- *  GeSHi is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  GeSHi is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with GeSHi; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * @package    geshi
- * @subpackage core
- * @author     Nigel McNie <nigel@geshi.org>, Benny Baumann <BenBE@omorphia.de>
- * @copyright  (C) 2004 - 2007 Nigel McNie, (C) 2007 - 2008 Benny Baumann
- * @license    http://gnu.org/copyleft/gpl.html GNU GPL
- *
- */
-
-//
-// GeSHi Constants
-// You should use these constant names in your programs instead of
-// their values - you never know when a value may change in a future
-// version
-//
-
-/** The version of this GeSHi file */
-/**
  * peterdd: Took the easybook/geshi fork ( https://github.com/easybook/geshi )
  * and corrected/adapted their version here.
  * easybook/geshi release date of 1.0.8.17: 2016-03-29 
@@ -164,7 +122,7 @@ if (!function_exists('stripos')) {
         /**
          * @ignore
          */
-        function stripos($haystack, $needle, $offset = null) {
+        function stripos(string $haystack, string $needle, $offset = null) : bool {
             if (!is_null($offset)) {
                 $haystack = substr($haystack, $offset);
             }
@@ -178,7 +136,7 @@ if (!function_exists('stripos')) {
         /**
          * @ignore
          */
-        function stripos($haystack, $needle, $offset = null) {
+        function stripos(string $haystack, string $needle, $offset = null) : bool {
             if (preg_match('/'. preg_quote($needle, '/') . '/', $haystack, $match, PREG_OFFSET_CAPTURE, $offset)) {
                 return $match[0][1];
             }
@@ -265,61 +223,49 @@ class GeSHi {
     /**#@+
      * @access private
      */
-    /**
+    var /**
      * The source code to highlight
      * @var string
      */
-    var $source = '';
+     $source = '';
 
-    /**
-     * The language to use when highlighting
-     * @var string
-     */
-    var $language = '';
+    var string $language = '';
 
-    /**
-     * The data for the language used
-     * @var array
-     */
-    var $language_data = array();
+    var array $language_data = array();
 
-    /**
+    var /**
      * The path to the language files
      * @var string
      */
-    var $language_path = GESHI_LANG_ROOT;
+     $language_path = GESHI_LANG_ROOT;
 
-    /**
+    var /**
      * The error message associated with an error
      * @var string
      * @todo check err reporting works
      */
-    var $error = false;
+     $error = false;
 
-    /**
-     * Possible error messages
-     * @var array
-     */
-    var $error_messages = array(
+    var array $error_messages = array(
         GESHI_ERROR_NO_SUCH_LANG => 'GeSHi could not find the language {LANGUAGE} (using path {PATH})',
         GESHI_ERROR_FILE_NOT_READABLE => 'The file specified for load_from_file was not readable',
         GESHI_ERROR_INVALID_HEADER_TYPE => 'The header type specified is invalid',
         GESHI_ERROR_INVALID_LINE_NUMBER_TYPE => 'The line number type specified is invalid'
     );
 
-    /**
+    var /**
      * Whether highlighting is strict or not
      * @var boolean
      */
-    var $strict_mode = false;
+     $strict_mode = false;
 
-    /**
+    var /**
      * Whether to use CSS classes in output
      * @var boolean
      */
-    var $use_classes = false;
+     $use_classes = false;
 
-    /**
+    var /**
      * The type of header to use. Can be one of the following
      * values:
      *
@@ -329,13 +275,9 @@ class GeSHi {
      *
      * @var int
      */
-    var $header_type = GESHI_HEADER_PRE;
+     $header_type = GESHI_HEADER_PRE;
 
-    /**
-     * Array of permissions for which lexics should be highlighted
-     * @var array
-     */
-    var $lexic_permissions = array(
+    var array $lexic_permissions = array(
         'KEYWORDS' =>    array(),
         'COMMENTS' =>    array('MULTI' => true),
         'REGEXPS' =>     array(),
@@ -348,212 +290,105 @@ class GeSHi {
         'SCRIPT' =>      true
     );
 
-    /**
-     * The time it took to parse the code
-     * @var double
-     */
-    var $time = 0;
+    var int $time = 0;
 
-    /**
-     * The content of the header block
-     * @var string
-     */
-    var $header_content = '';
+    var string $header_content = '';
 
-    /**
-     * The content of the footer block
-     * @var string
-     */
-    var $footer_content = '';
+    var string $footer_content = '';
 
-    /**
-     * The style of the header block
-     * @var string
-     */
-    var $header_content_style = '';
+    var string $header_content_style = '';
 
-    /**
-     * The style of the footer block
-     * @var string
-     */
-    var $footer_content_style = '';
+    var string $footer_content_style = '';
 
-    /**
-     * Tells if a block around the highlighted source should be forced
-     * if not using line numbering
-     * @var boolean
-     */
-    var $force_code_block = false;
+    var bool $force_code_block = false;
 
-    /**
-     * The styles for hyperlinks in the code
-     * @var array
-     */
-    var $link_styles = array();
+    var array $link_styles = array();
 
-    /**
-     * Whether important blocks should be recognised or not
-     * @var boolean
-     * @deprecated
-     * @todo REMOVE THIS FUNCTIONALITY!
-     */
-    var $enable_important_blocks = false;
+    var bool $enable_important_blocks = false;
 
-    /**
-     * Styles for important parts of the code
-     * @var string
-     * @deprecated
-     * @todo As above - rethink the whole idea of important blocks as it is buggy and
-     * will be hard to implement in 1.2
-     */
-    var $important_styles = 'font-weight: bold; color: red;'; // Styles for important parts of the code
+    var string $important_styles = 'font-weight: bold; color: red;'; // Styles for important parts of the code
 
-    /**
-     * Whether CSS IDs should be added to the code
-     * @var boolean
-     */
-    var $add_ids = false;
+    var bool $add_ids = false;
 
-    /**
-     * Lines that should be highlighted extra
-     * @var array
-     */
-    var $highlight_extra_lines = array();
+    var array $highlight_extra_lines = array();
 
-    /**
-     * Styles of lines that should be highlighted extra
-     * @var array
-     */
-    var $highlight_extra_lines_styles = array();
+    var array $highlight_extra_lines_styles = array();
 
-    /**
-     * Styles of extra-highlighted lines
-     * @var string
-     */
-    var $highlight_extra_lines_style = 'background-color: #ffc;';
+    var string $highlight_extra_lines_style = 'background-color: #ffc;';
 
-    /**
+    var /**
      * The line ending
      * If null, nl2br() will be used on the result string.
      * Otherwise, all instances of \n will be replaced with $line_ending
      * @var string
      */
-    var $line_ending = null;
+     $line_ending = null;
 
-    /**
-     * Number at which line numbers should start at
-     * @var int
-     */
-    var $line_numbers_start = 1;
+    var int $line_numbers_start = 1;
 
-    /**
-     * The overall style for this code block
-     * @var string
-     */
-    var $overall_style = 'font-family:monospace;';
+    var string $overall_style = 'font-family:monospace;';
 
-    /**
-     *  The style for the actual code
-     * @var string
-     */
-    var $code_style = 'font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;';
+    var string $code_style = 'font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;';
 
-    /**
-     * The overall class for this code block
-     * @var string
-     */
-    var $overall_class = '';
+    var string $overall_class = '';
 
-    /**
+    var /**
      * The overall ID for this code block
      * @var string
      */
-    var $overall_id = '';
+     $overall_id = '';
 
-    /**
-     * Line number styles
-     * @var string
-     */
-    var $line_style1 = 'font-weight: normal; vertical-align:top;';
+    var string $line_style1 = 'font-weight: normal; vertical-align:top;';
 
-    /**
-     * Line number styles for fancy lines
-     * @var string
-     */
-    var $line_style2 = 'font-weight: bold; vertical-align:top;';
+    var string $line_style2 = 'font-weight: bold; vertical-align:top;';
 
-    /**
-     * Style for line numbers when GESHI_HEADER_PRE_TABLE is chosen
-     * @var string
-     */
-    var $table_linenumber_style = 'width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;';
+    var string $table_linenumber_style = 'width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;';
 
-    /**
+    var /**
      * Flag for how line numbers are displayed
      * @var boolean
      */
-    var $line_numbers = GESHI_NO_LINE_NUMBERS;
+     $line_numbers = GESHI_NO_LINE_NUMBERS;
 
-    /**
+    var /**
      * Flag to decide if multi line spans are allowed. Set it to false to make sure
      * each tag is closed before and reopened after each linefeed.
      * @var boolean
      */
-    var $allow_multiline_span = true;
+     $allow_multiline_span = true;
 
-    /**
-     * The "nth" value for fancy line highlighting
-     * @var int
-     */
-    var $line_nth_row = 0;
+    var int $line_nth_row = 0;
 
-    /**
-     * The size of tab stops
-     * @var int
-     */
-    var $tab_width = 8;
+    var int $tab_width = 8;
 
-    /**
+    var /**
      * Should we use language-defined tab stop widths?
      * @var int
      */
-    var $use_language_tab_width = false;
+     $use_language_tab_width = false;
 
-    /**
-     * Default target for keyword links
-     * @var string
-     */
-    var $link_target = '';
+    var string $link_target = '';
 
-    /**
-     * The encoding to use for entity encoding
-     * NOTE: Used with Escape Char Sequences to fix UTF-8 handling (cf. SF#2037598)
-     * @var string
-     */
-    var $encoding = 'utf-8';
+    var string $encoding = 'utf-8';
 
-    /**
-     * Should keywords be linked?
-     * @var boolean
-     */
-    var $keyword_links = true;
+    var bool $keyword_links = true;
 
-    /**
+    var /**
      * Currently loaded language file
      * @var string
      * @since 1.0.7.22
      */
-    var $loaded_language = '';
+     $loaded_language = '';
 
-    /**
+    var /**
      * Wether the caches needed for parsing are built or not
      *
      * @var bool
      * @since 1.0.8
      */
-    var $parse_cache_built = false;
+     $parse_cache_built = false;
 
-    /**
+    var /**
      * Work around for Suhosin Patch with disabled /e modifier
      *
      * Note from suhosins author in config file:
@@ -568,19 +403,12 @@ class GeSHi {
      * @var array
      * @since 1.0.8
      */
-    var $_kw_replace_group = 0;
+     $_kw_replace_group = 0;
     var $_rx_key = 0;
 
-    /**
-     * some "callback parameters" for handle_multiline_regexps
-     *
-     * @since 1.0.8
-     * @access private
-     * @var string
-     */
-    var $_hmr_before = '';
+    var string $_hmr_before = '';
     var $_hmr_replace = '';
-    var $_hmr_after = '';
+    var string $_hmr_after = '';
     var $_hmr_key = 0;
 
     /**#@-*/
@@ -616,7 +444,7 @@ class GeSHi {
      * @since 1 0.8.11
      */
     function get_version()
-    {
+    : string {
         return GESHI_VERSION;
     }
 
@@ -651,7 +479,7 @@ class GeSHi {
      * @return string The name for the current language
      * @since  1.0.2
      */
-    function get_language_name() {
+    function get_language_name() : string {
         if (GESHI_ERROR_NO_SUCH_LANG == $this->error) {
             return $this->language_data['LANG_NAME'] . ' (Unknown Language)';
         }
@@ -678,7 +506,7 @@ class GeSHi {
      * @param string The name of the language to use
      * @since 1.0.0
      */
-    function set_language($language, $force_reset = false) {
+    function set_language($language, bool $force_reset = false) {
         if ($force_reset) {
             $this->loaded_language = false;
         }
@@ -756,8 +584,8 @@ class GeSHi {
      * @param boolean $longnames
      * @return array
      */
-    function get_supported_languages($full_names=false)
-    {
+    function get_supported_languages(bool $full_names=false)
+    : array {
         // return array
         $back = array();
 
@@ -868,7 +696,7 @@ class GeSHi {
      * @param boolean Whether to merge the styles with the current styles or not
      * @since 1.0.0
      */
-    function set_overall_style($style, $preserve_defaults = false) {
+    function set_overall_style($style, bool $preserve_defaults = false) {
         if (!$preserve_defaults) {
             $this->overall_style = $style;
         } else {
@@ -906,7 +734,7 @@ class GeSHi {
      * @param boolean Whether to turn classes on or not
      * @since 1.0.0
      */
-    function enable_classes($flag = true) {
+    function enable_classes(bool $flag = true) {
         $this->use_classes = ($flag) ? true : false;
     }
 
@@ -925,7 +753,7 @@ class GeSHi {
      * @param boolean Whether to merge the current styles with the new styles
      * @since 1.0.2
      */
-    function set_code_style($style, $preserve_defaults = false) {
+    function set_code_style($style, bool $preserve_defaults = false) {
         if (!$preserve_defaults) {
             $this->code_style = $style;
         } else {
@@ -945,7 +773,7 @@ class GeSHi {
      *        styles with the current styles or not
      * @since 1.0.2
      */
-    function set_line_style($style1, $style2 = '', $preserve_defaults = false) {
+    function set_line_style($style1, $style2 = '', bool $preserve_defaults = false) {
         //Check if we got 2 or three parameters
         if (is_bool($style2)) {
             $preserve_defaults = $style2;
@@ -979,7 +807,7 @@ class GeSHi {
      * @param int Defines which lines are fancy
      * @since 1.0.0
      */
-    function enable_line_numbers($flag, $nth_row = 5) {
+    function enable_line_numbers(bool $flag, int $nth_row = 5) {
         if (GESHI_NO_LINE_NUMBERS != $flag && GESHI_NORMAL_LINE_NUMBERS != $flag
             && GESHI_FANCY_LINE_NUMBERS != $flag) {
             $this->error = GESHI_ERROR_INVALID_LINE_NUMBER_TYPE;
@@ -1022,7 +850,7 @@ class GeSHi {
      *                to overwrite them
      * @since 1.0.0
      */
-    function set_keyword_group_style($key, $style, $preserve_defaults = false) {
+    function set_keyword_group_style($key, $style, bool $preserve_defaults = false) {
         //Set the style for this keyword group
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['KEYWORDS'][$key] = $style;
@@ -1043,7 +871,7 @@ class GeSHi {
      * @param boolean Whether to turn highlighting for that group on or off
      * @since 1.0.0
      */
-    function set_keyword_group_highlighting($key, $flag = true) {
+    function set_keyword_group_highlighting($key, bool $flag = true) {
         $this->lexic_permissions['KEYWORDS'][$key] = ($flag) ? true : false;
     }
 
@@ -1058,7 +886,7 @@ class GeSHi {
      *                to overwrite them
      * @since 1.0.0
      */
-    function set_comments_style($key, $style, $preserve_defaults = false) {
+    function set_comments_style($key, $style, bool $preserve_defaults = false) {
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['COMMENTS'][$key] = $style;
         } else {
@@ -1073,7 +901,7 @@ class GeSHi {
      * @param boolean Whether to turn highlighting for that group on or off
      * @since 1.0.0
      */
-    function set_comments_highlighting($key, $flag = true) {
+    function set_comments_highlighting($key, bool $flag = true) {
         $this->lexic_permissions['COMMENTS'][$key] = ($flag) ? true : false;
     }
 
@@ -1087,7 +915,7 @@ class GeSHi {
      *                to overwrite them
      * @since 1.0.0
      */
-    function set_escape_characters_style($style, $preserve_defaults = false, $group = 0) {
+    function set_escape_characters_style($style, bool $preserve_defaults = false, $group = 0) {
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['ESCAPE_CHAR'][$group] = $style;
         } else {
@@ -1101,7 +929,7 @@ class GeSHi {
      * @param boolean Whether to turn highlighting for escape characters on or off
      * @since 1.0.0
      */
-    function set_escape_characters_highlighting($flag = true) {
+    function set_escape_characters_highlighting(bool $flag = true) {
         $this->lexic_permissions['ESCAPE_CHAR'] = ($flag) ? true : false;
     }
 
@@ -1119,7 +947,7 @@ class GeSHi {
      * @since 1.0.0
      * @deprecated In favour of set_symbols_style
      */
-    function set_brackets_style($style, $preserve_defaults = false) {
+    function set_brackets_style($style, bool $preserve_defaults = false) {
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['BRACKETS'][0] = $style;
         } else {
@@ -1152,7 +980,7 @@ class GeSHi {
      * @param int     Tells the group of symbols for which style should be set.
      * @since 1.0.1
      */
-    function set_symbols_style($style, $preserve_defaults = false, $group = 0) {
+    function set_symbols_style($style, bool $preserve_defaults = false, $group = 0) {
         // Update the style of symbols
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['SYMBOLS'][$group] = $style;
@@ -1191,7 +1019,7 @@ class GeSHi {
      * @param int     Tells the group of strings for which style should be set.
      * @since 1.0.0
      */
-    function set_strings_style($style, $preserve_defaults = false, $group = 0) {
+    function set_strings_style($style, bool $preserve_defaults = false, $group = 0) {
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['STRINGS'][$group] = $style;
         } else {
@@ -1220,7 +1048,7 @@ class GeSHi {
      * @param int     Tells the group of script blocks for which style should be set.
      * @since 1.0.8.4
      */
-    function set_script_style($style, $preserve_defaults = false, $group = 0) {
+    function set_script_style($style, bool $preserve_defaults = false, $group = 0) {
         // Update the style of symbols
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['SCRIPT'][$group] = $style;
@@ -1240,7 +1068,7 @@ class GeSHi {
      * @param int     Tells the group of numbers for which style should be set.
      * @since 1.0.0
      */
-    function set_numbers_style($style, $preserve_defaults = false, $group = 0) {
+    function set_numbers_style($style, bool $preserve_defaults = false, $group = 0) {
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['NUMBERS'][$group] = $style;
         } else {
@@ -1271,7 +1099,7 @@ class GeSHi {
      *                to overwrite them
      * @since 1.0.0
      */
-    function set_methods_style($key, $style, $preserve_defaults = false) {
+    function set_methods_style($key, $style, bool $preserve_defaults = false) {
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['METHODS'][$key] = $style;
         } else {
@@ -1299,7 +1127,7 @@ class GeSHi {
      *                to overwrite them
      * @since 1.0.0
      */
-    function set_regexps_style($key, $style, $preserve_defaults = false) {
+    function set_regexps_style($key, $style, bool $preserve_defaults = false) {
         if (!$preserve_defaults) {
             $this->language_data['STYLES']['REGEXPS'][$key] = $style;
         } else {
@@ -1398,7 +1226,7 @@ class GeSHi {
      * @param boolean Whether to enable strict mode or not
      * @since 1.0.0
      */
-    function enable_strict_mode($mode = true) {
+    function enable_strict_mode(bool $mode = true) {
         if (GESHI_MAYBE == $this->language_data['STRICT_MODE_APPLIES']) {
             $this->strict_mode = ($mode) ? GESHI_ALWAYS : GESHI_NEVER;
         }
@@ -1425,7 +1253,7 @@ class GeSHi {
      * @param boolean A flag specifying whether to enable or disable all highlighting
      * @todo  Rewrite with array traversal
      */
-    function enable_highlighting($flag = true) {
+    function enable_highlighting(bool $flag = true) {
         $flag = $flag ? true : false;
         foreach ($this->lexic_permissions as $key => $value) {
             if (is_array($value)) {
@@ -1452,7 +1280,7 @@ class GeSHi {
      *       a extension->lang lookup?)
      * @todo static?
      */
-    function get_language_name_from_extension( $extension, $lookup = array() ) {
+    function get_language_name_from_extension( $extension, $lookup = array() ) : string {
         $extension = strtolower($extension);
 
         if ( !is_array($lookup) || empty($lookup)) {
@@ -1559,7 +1387,7 @@ class GeSHi {
      * @todo Complete rethink of this and above method
      * @since 1.0.5
      */
-    function load_from_file($file_name, $lookup = array()) {
+    function load_from_file(string $file_name, array $lookup = array()) {
         if (is_readable($file_name)) {
             $this->set_source(file_get_contents($file_name));
             $this->set_language($this->get_language_name_from_extension(substr(strrchr($file_name, '.'), 1), $lookup));
@@ -1603,7 +1431,7 @@ class GeSHi {
      *               remove a lot of keywords.
      * @since 1.0.0
      */
-    function remove_keyword($key, $word, $recompile = true) {
+    function remove_keyword($key, $word, bool $recompile = true) {
         $key_to_remove = array_search($word, $this->language_data['KEYWORDS'][$key]);
         if ($key_to_remove !== false) {
             unset($this->language_data['KEYWORDS'][$key][$key_to_remove]);
@@ -1624,7 +1452,7 @@ class GeSHi {
      * @param array  The words to use for the keyword group
      * @since 1.0.0
      */
-    function add_keyword_group($key, $styles, $case_sensitive = true, $words = array()) {
+    function add_keyword_group($key, $styles, bool $case_sensitive = true, array $words = array()) : bool {
         $words = (array) $words;
         if  (empty($words)) {
             // empty word lists mess up highlighting
@@ -1772,7 +1600,7 @@ class GeSHi {
      * @param string The target for links in the code, e.g. _blank
      * @since 1.0.3
      */
-    function set_link_target($target) {
+    function set_link_target(string $target) {
         if (!$target) {
             $this->link_target = '';
         } else {
@@ -1808,7 +1636,7 @@ class GeSHi {
      * @param boolean If true, IDs will be added to each line.
      * @since 1.0.2
      */
-    function enable_ids($flag = true) {
+    function enable_ids(bool $flag = true) {
         $this->add_ids = ($flag) ? true : false;
     }
 
@@ -1865,7 +1693,7 @@ class GeSHi {
      * @param string The new line-ending
      * @since 1.0.2
      */
-    function set_line_ending($line_ending) {
+    function set_line_ending(string $line_ending) {
         $this->line_ending = (string)$line_ending;
     }
 
@@ -1900,7 +1728,7 @@ class GeSHi {
      * @param string The encoding to use for the source
      * @since 1.0.3
      */
-    function set_encoding($encoding) {
+    function set_encoding(string $encoding) {
         if ($encoding) {
           $this->encoding = strtolower($encoding);
         }
@@ -1912,7 +1740,7 @@ class GeSHi {
      * @param boolean If true, links will be added to keywords
      * @since 1.0.2
      */
-    function enable_keyword_links($enable = true) {
+    function enable_keyword_links(bool $enable = true) {
         $this->keyword_links = (bool) $enable;
     }
 
@@ -3231,7 +3059,7 @@ class GeSHi {
      * @since  1.0.0
      * @access private
      */
-    function change_case($instr) {
+    function change_case(string $instr) : string {
         switch ($this->language_data['CASE_KEYWORDS']) {
             case GESHI_CAPS_UPPER:
                 return strtoupper($instr);
@@ -3252,7 +3080,7 @@ class GeSHi {
      *
      * @todo   Get rid of ender in keyword links
      */
-    function handle_keyword_replace($match) {
+    function handle_keyword_replace($match) : string {
         $k = $this->_kw_replace_group;
         $keyword = $match[0];
         $keyword_match = $match[1];
@@ -3312,7 +3140,7 @@ class GeSHi {
      * @since 1.0.8
      * @access private
      */
-    function handle_regexps_callback($matches) {
+    function handle_regexps_callback($matches) : string {
         // before: "' style=\"' . call_user_func(\"$func\", '\\1') . '\"\\1|>'",
         return  ' style="' . call_user_func($this->language_data['STYLES']['REGEXPS'][$this->_rx_key], $matches[1]) . '"'. $matches[1] . '|>';
     }
@@ -3327,7 +3155,7 @@ class GeSHi {
      * @since 1.0.8
      * @access private
      */
-    function handle_multiline_regexps($matches) {
+    function handle_multiline_regexps($matches) : string {
         $before = $this->_hmr_before;
         $after = $this->_hmr_after;
         if ($this->_hmr_replace) {
@@ -3360,7 +3188,7 @@ class GeSHi {
      * @access private
      * @todo BUGGY! Why? Why not build string and return?
      */
-    function parse_non_string_part($stuff_to_parse) {
+    function parse_non_string_part($stuff_to_parse) : string {
         $stuff_to_parse = ' ' . $this->hsc($stuff_to_parse);
 
         // Highlight keywords
@@ -3682,7 +3510,7 @@ class GeSHi {
      * @since 1.0.2
      * @access private
      */
-    function set_time($start_time, $end_time) {
+    function set_time(string $start_time, string $end_time) {
         $start = explode(' ', $start_time);
         $end = explode(' ', $end_time);
         $this->time = $end[0] + $end[1] - $start[0] - $start[1];
@@ -3704,7 +3532,7 @@ class GeSHi {
      * @since 1.0.8
      * @access private
      */
-    function merge_arrays() {
+    function merge_arrays() : bool {
         $arrays = func_get_args();
         $narrays = count($arrays);
 
@@ -3745,7 +3573,7 @@ class GeSHi {
      * @access private
      * @todo Needs to load keys for lexic permissions for keywords, regexps etc
      */
-    function load_language($file_name) {
+    function load_language(string $file_name) {
         if ($file_name == $this->loaded_language) {
             // this file is already loaded!
             return;
@@ -4092,7 +3920,7 @@ class GeSHi {
      * @since  1.0.0
      * @access private
      */
-    function header() {
+    function header() : string {
         // Get attributes needed
         /**
          * @todo   Document behaviour change - class is outputted regardless of whether
@@ -4172,7 +4000,7 @@ class GeSHi {
      * @since  1.0.0
      * @access private
      */
-    function footer() {
+    function footer() : string {
         $footer = $this->footer_content;
         if ($footer) {
             if ($this->header_type == GESHI_HEADER_PRE) {
@@ -4313,7 +4141,7 @@ class GeSHi {
      * @return      string  converted string
      * @since       1.0.7.18
      */
-    function hsc($string, $quote_style = ENT_COMPAT) {
+    function hsc(string $string, $quote_style = ENT_COMPAT) : string {
         // init
         static $aTransSpecchar = array(
             '&' => '&amp;',
@@ -4344,7 +4172,7 @@ class GeSHi {
         return strtr($string, $aTransSpecchar);
     }
 
-    function _genCSSName($name){
+    function _genCSSName($name): string {
         return (is_numeric($name[0]) ? '_' : '') . $name;
     }
 
@@ -4357,7 +4185,7 @@ class GeSHi {
      * @return string A stylesheet built on the data for the current language
      * @since  1.0.0
      */
-    function get_stylesheet($economy_mode = true) {
+    function get_stylesheet(bool $economy_mode = true) : string {
         // If there's an error, chances are that the language file
         // won't have populated the language data file, so we can't
         // risk getting a stylesheet...
@@ -4588,7 +4416,7 @@ class GeSHi {
     * @since 1.0.8
     * @access private
     */
-    function optimize_regexp_list($list, $regexp_delimiter = '/') {
+    function optimize_regexp_list($list, $regexp_delimiter = '/') : array {
         $regex_chars = array('.', '\\', '+', '-', '*', '?', '[', '^', ']', '$',
             '(', ')', '{', '}', '=', '!', '<', '>', '|', ':', $regexp_delimiter);
         sort($list);
@@ -4711,7 +4539,7 @@ class GeSHi {
     * @since 1.0.8
     * @access private
     */
-    function _optimize_regexp_list_tokens_to_string(&$tokens, $recursed = false) {
+    function _optimize_regexp_list_tokens_to_string(iterable &$tokens, bool $recursed = false) : string {
         $list = '';
         foreach ($tokens as $token => $sub_tokens) {
             $list .= $token;
@@ -4736,7 +4564,7 @@ class GeSHi {
             $list = preg_replace('#\(\?\:(.)\)\?#', '\1?', $list);
             // (?:a|b|c|d|...)? => [abcd...]?
             // TODO: a|bb|c => [ac]|bb
-            $list = preg_replace_callback('#\(\?\:((?:.\|)+.)\)#', function ($matches) { return "[" . str_replace("|", "", $matches[1]) . "]"; }, $list);
+            $list = preg_replace_callback('#\(\?\:((?:.\|)+.)\)#', function ($matches) : string { return "[" . str_replace("|", "", $matches[1]) . "]"; }, $list);
         }
         // return $list without trailing pipe
         return substr($list, 0, -1);
@@ -4756,7 +4584,7 @@ if (!function_exists('geshi_highlight')) {
      * @return string The code highlighted (if $return is true)
      * @since 1.0.2
      */
-    function geshi_highlight($string, $language, $path = null, $return = false) {
+    function geshi_highlight($string, $language, $path = null, bool $return = false) {
         $geshi = new GeSHi($string, $language, $path);
         $geshi->set_header_type(GESHI_HEADER_NONE);
 

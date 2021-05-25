@@ -24,7 +24,7 @@ $plugin_types = array('admin','syntax','action');
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function plugin_list($type='',$all=false){
+function plugin_list($type='',bool $all=false): array {
   $plugins = array();
   if ($dh = opendir(DOKU_PLUGIN)) {
     while (false !== ($plugin = readdir($dh))) {
@@ -90,6 +90,6 @@ function &plugin_load($type,$name){
   return $DOKU_PLUGINS[$type][$name];
 }
 
-function plugin_isdisabled($name) { return @file_exists(DOKU_PLUGIN.$name.'/disabled'); }
-function plugin_enable($name) { return @unlink(DOKU_PLUGIN.$name.'/disabled'); }
-function plugin_disable($name) { return @touch(DOKU_PLUGIN.$name.'/disabled'); }
+function plugin_isdisabled(string $name) { return @file_exists(DOKU_PLUGIN.$name.'/disabled'); }
+function plugin_enable(string $name) : bool { return @unlink(DOKU_PLUGIN.$name.'/disabled'); }
+function plugin_disable(string $name) : bool { return @touch(DOKU_PLUGIN.$name.'/disabled'); }
