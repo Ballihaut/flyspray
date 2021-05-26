@@ -1,5 +1,5 @@
 <?php
-/**
+namespace /**
  * A Compatibility library with PHP 5.5's simplified password hashing API.
  *
  * @author Anthony Ferrara <ircmaxell@php.net>
@@ -9,7 +9,7 @@
  * Comment of Flyspray dev peterdd: This is lib/password.php from https://github.com/ircmaxell/password_compat master branch at 2016-06-27 
  */
 
-namespace {
+{
 
     if (!defined('PASSWORD_BCRYPT')) {
         /**
@@ -182,7 +182,7 @@ namespace {
          *
          * @return array The array of information about the hash.
          */
-        function password_get_info($hash) {
+        function password_get_info(string $hash) {
             $return = array(
                 'algo' => 0,
                 'algoName' => 'unknown',
@@ -208,7 +208,7 @@ namespace {
          *
          * @return boolean True if the password needs to be rehashed.
          */
-        function password_needs_rehash($hash, $algo, array $options = array()) {
+        function password_needs_rehash(string $hash, int $algo, array $options = array()) : bool {
             $info = password_get_info($hash);
             if ($info['algo'] !== (int) $algo) {
                 return true;
@@ -232,7 +232,7 @@ namespace {
          *
          * @return boolean If the password matches the hash
          */
-        function password_verify($password, $hash) {
+        function password_verify(string $password, $hash) : bool {
             if (!function_exists('crypt')) {
                 trigger_error("Crypt must be loaded for password_verify to function", E_USER_WARNING);
                 return false;
@@ -269,7 +269,7 @@ namespace PasswordCompat\binary {
          * @internal
          * @return int The number of bytes
          */
-        function _strlen($binary_string) {
+        function _strlen(string $binary_string) {
             if (function_exists('mb_strlen')) {
                 return mb_strlen($binary_string, '8bit');
             }
@@ -288,7 +288,7 @@ namespace PasswordCompat\binary {
          * @internal
          * @return string The substring
          */
-        function _substr($binary_string, $start, $length) {
+        function _substr(string $binary_string, int $start, $length) : string {
             if (function_exists('mb_substr')) {
                 return mb_substr($binary_string, $start, $length, '8bit');
             }

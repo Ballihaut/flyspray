@@ -15,14 +15,14 @@ define('SECURITY_TLS', 2);
 class Jabber
 {
     public $connection = null;
-    public $session = array();
-    public $resource = 'class.jabber2.php';
-    public $log = array();
-    public $log_enabled = true;
-    public $timeout = 10;
-    public $user = '';
-    public $password = '';
-    public $server = '';
+    public array $session = array();
+    public string $resource = 'class.jabber2.php';
+    public array $log = array();
+    public bool $log_enabled = true;
+    public int $timeout = 10;
+    public string $user = '';
+    public string $password = '';
+    public string $server = '';
     public $features = array();
 
     public function __construct($login, $password, $security = SECURITY_NONE, $port = 5222, $host = '')
@@ -89,7 +89,7 @@ class Jabber
      * @access public
      * @return bool
      */
-    public function send($xml)
+    public function send(string $xml)
     {
         if ($this->connected()) {
            $xml = trim($xml);
@@ -109,8 +109,8 @@ class Jabber
      * @access public
      * @return bool
      */
-    public function open_socket($server, $port, $ssl = false)
-    {
+    public function open_socket(string $server, int $port, bool $ssl = false)
+    : bool {
         if (function_exists("dns_get_record")) {
             $record = dns_get_record("_xmpp-client._tcp.$server", DNS_SRV);
             if (!empty($record)) {
@@ -138,7 +138,7 @@ class Jabber
     }
 
     public function log($msg)
-    {
+    : bool {
         if ($this->log_enabled) {
             $this->log[] = $msg;
             return true;
@@ -153,8 +153,8 @@ class Jabber
      * @access public
      * @return mixed either false for timeout or an array with the received data
      */
-    public function listen($timeout = 10, $wait = false)
-    {
+    public function listen(int $timeout = 10, bool $wait = false)
+    : bool {
         if (!$this->connected()) {
             return false;
         }
@@ -184,7 +184,7 @@ class Jabber
      * @return bool
      */
     public function login()
-    {
+    : bool {
         if (!count($this->features)) {
             $this->log('Error: No feature information from server available.');
             return false;
@@ -199,7 +199,7 @@ class Jabber
      * @return bool
      */
     public function register()
-    {
+    : bool {
         if (!isset($this->session['id']) || isset($this->session['jid'])) {
             $this->log('Error: Cannot initiate registration.');
             return false;
@@ -217,7 +217,7 @@ class Jabber
      * @return bool
      */
     public function unregister()
-    {
+    : bool {
         if (!isset($this->session['id']) || !isset($this->session['jid'])) {
             $this->log('Error: Cannot initiate un-registration.');
             return false;
@@ -239,8 +239,8 @@ class Jabber
      * @access public
      * @return bool
      */
-    public function presence($type = '', $message = '', $unavailable = false)
-    {
+    public function presence($type = '', string $message = '', $unavailable = false)
+    : bool {
         if (!isset($this->session['jid'])) {
             $this->log('Error: Cannot set presence at this point.');
             return false;
@@ -507,8 +507,8 @@ class Jabber
         }
     }
 
-    public function send_message($to, $text, $subject = '', $type = 'normal')
-    {
+    public function send_message($to, $text, string $subject = '', $type = 'normal')
+    : bool {
         if (!isset($this->session['jid'])) {
             return false;
         }
@@ -526,7 +526,7 @@ class Jabber
                             </message>");
     }
 
-    public function get_messages($waitfor = 3)
+    public function get_messages(int $waitfor = 3)
     {
         if (!isset($this->session['sent_presence']) || !$this->session['sent_presence']) {
             $this->presence();
@@ -540,12 +540,12 @@ class Jabber
     }
 
     public function connected()
-    {
+    : bool {
         return is_resource($this->connection) && !feof($this->connection);
     }
 
     public function disconnect()
-    {
+    : bool {
         if ($this->connected()) {
             // disconnect gracefully
             if (isset($this->session['sent_presence'])) {
@@ -559,12 +559,12 @@ class Jabber
     }
 
     public static function can_use_ssl()
-    {
+    : bool {
         return extension_loaded('openssl');
     }
 
     public static function can_use_tls()
-    {
+    : bool {
         return Jabber::can_use_ssl() && function_exists('stream_socket_enable_crypto');
     }
 
@@ -575,7 +575,7 @@ class Jabber
      * @return string
      */
     public function encrypt_password($data)
-    {
+    : string {
         // let's me think about <challenge> again...
         foreach (array('realm', 'cnonce', 'digest-uri') as $key) {
             if (!isset($data[$key])) {
@@ -602,7 +602,7 @@ class Jabber
      * @access public
      * @return array a => b ...
      */
-    public function parse_data($data)
+    public function parse_data(string $data)
     {
         // super basic, but should suffice
         $data = explode(',', $data);
@@ -622,8 +622,8 @@ class Jabber
      * @access public
      * @return string
      */
-    public function implode_data($data)
-    {
+    public function implode_data(iterable $data)
+    : string {
         $return = array();
         foreach ($data as $key => $value) {
             $return[] = $key . '="' . $value . '"';
@@ -637,8 +637,8 @@ class Jabber
      * @access public
      * @return string
      */
-    public function check_jid($jid)
-    {
+    public function check_jid(string $jid)
+    : bool {
         $i = strpos($jid, '@');
         if ($i === false) {
             return false;
@@ -817,8 +817,8 @@ class Jabber
         return $result;
     }
 
-    public static function jspecialchars($data)
-    {
+    public static function jspecialchars(string $data)
+    : string {
         return htmlspecialchars($data, ENT_QUOTES, 'utf-8');
     }
 
@@ -829,7 +829,7 @@ class Jabber
 	// xmlize()
 	// (c) Hans Anderson / http://www.hansanderson.com/php/xml/
 
-	public static function xmlize($data, $WHITE=1, $encoding='UTF-8') {
+	public static function xmlize(string $data, int $WHITE=1, $encoding='UTF-8') {
 
 		$data = trim($data);
         if (substr($data, 0, 5) != '<?xml') {

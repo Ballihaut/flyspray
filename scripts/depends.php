@@ -95,7 +95,7 @@ while ($row = $db->fetchRow($get_edges)) {
 $connected  = array();
 $levelsdown = 0;
 $levelsup   = 0;
-function connectsTo($id, $down, $up) {
+function connectsTo($id, int $down, int $up) {
     global $connected, $edge_list, $rvrs_list, $levelsdown, $levelsup;
     global $prunemode, $node_list;
     if (!isset($connected[$id])) { $connected[$id]=1; }

@@ -68,13 +68,27 @@ function set(id){
 <?php
 
 // Set current directory to where the language files are
-chdir('lang');
+/*T <script language="javascript">
+// Indicate which texts are changed, called from input and textarea onchange
+function set(id){
+  var checkbox = document.getElementById('id_checkbox_' + id);
+  if(checkbox)
+    checkbox.checked = true;
+  var hidden = document.getElementById('id_hidden_' + id);
+  if(hidden)
+    hidden.disabled = false;
+  var conf = document.getElementById('id_confirm');
+  if(conf)
+    conf.disabled = true;
+}
+</script>
+*/chdir('lang')?><?php /*W3*/ $lang = isset($_GET['lang']) ? $_GET['lang']:false;
 
-$lang = isset($_GET['lang']) ? $_GET['lang']:false;
 $fail = '';
 if(!$lang || !preg_match('/^[a-zA-Z0-9_]+$/', $lang)){
 	$fail .= "Language code not supplied correctly<br>\n";
 }
+;
 if(!file_exists('en.php')) {
 	$fail .= "The english language file <code>en.php</code> is missing. Make sure this script is run from the same directory as the language files <code>.../flyspray/lang/</code><br>\n";
 }
@@ -82,14 +96,13 @@ if($fail) {
 	die($fail."<b>Usage:</b> <a href='?do=langedit&lang='>&lt;lang code&gt;</a> where &lt;lang code&gt; should be replaced by your language, e.g. <b>de</b> for German.");
 }
 // Read english language file in array $language (assumed to be UTF-8 encoded)
-require 'en.php';
-if(!is_array(@$language)){
+require 'en.php'if(!is_array(@$language)){
 	die("Invalid language file for english");
 }
-$count = count($language);
+;
+$count = count($language)$working_copy = false;
 
 // Read the translation file in array $translation (assumed to be UTF-8 encoded)
-$working_copy = false;
 if(!file_exists($lang.'.php') && !file_exists('.'.$lang.'.php.work')) {
 	echo '<h3>A new language file will be created: <code>'.$lang.'.php</code></h2>';
 } else {
@@ -115,12 +128,11 @@ if(!file_exists($lang.'.php') && !file_exists('.'.$lang.'.php.work')) {
 	}
 }
 
-$limit = 30;
-$begin = isset($_GET['begin']) ? (int)($_GET['begin'] / $limit) * $limit : 0;
+;
+$limit = 30$begin = isset($_GET['begin']) ? (int)($_GET['begin'] / $limit) * $limit : 0;
+$show_empty = (!isset($_POST['search']) && isset($_REQUEST['empty']));
 
 // Was show missing pressed?
-$show_empty = (!isset($_POST['search']) && isset($_REQUEST['empty']));  // Either POST or URL
-// Any text in search box?
 if(!$show_empty && isset($_POST['search_for'])) {
 	$search = trim($_POST['search_for']);
 } else if(!$show_empty && isset($_GET['search_for'])) {
@@ -129,9 +141,9 @@ if(!$show_empty && isset($_POST['search_for'])) {
 	$search = "";
 }
 // Path to this file
-$self = "{$_SERVER['SCRIPT_NAME']}?do=langedit&lang=$lang";
-
-if(isset($_POST['confirm'])) {
+;  // Either POST or URL
+// Any text in search box?
+$self = "{$_SERVER['SCRIPT_NAME']}?do=langedit&lang=$lang"if(isset($_POST['confirm'])) {
   // Make a backup
   unlink(".$lang.php.bak");
   rename("$lang.php", ".$lang.php.bak");
@@ -148,10 +160,10 @@ if(isset($_POST['confirm'])) {
 }
 
 // One form for all buttons and inputs
-echo '<a class="button" href="?do=langdiff">Overview</a>';
-echo "<form action=\"$self&do=langedit&begin=$begin". ($show_empty? "&empty=": "") . "\" method=\"post\">\n";
+;
+
+echo '<a class="button" href="?do=langdiff">Overview</a>'echo "<form action=\"$self&do=langedit&begin=$begin". ($show_empty? "&empty=": "") . "\" method=\"post\">\n";
 echo "<table cellspacing=0 cellpadding=1>\n<tr><td colspan=3>";
-// Make page links
 for($p = 0; $p < $count; $p += $limit){
 	if($p){
 		echo " | ";
@@ -164,28 +176,33 @@ for($p = 0; $p < $count; $p += $limit){
 		echo "<b>$bgn&hellip;$end</b>\n";
 	}
 }
+;
+// Make page links
 ?>
 </td><td>
 <input type="submit" name="submit" value="Save changes" title="Saves changes to a work file">
-<input type="submit" name="confirm" id="id_confirm" value="Confirm all changes"<?php echo !$working_copy ? ' disabled="disabled"': ''; ?> title="Confirm all changes and replace the original language file">
+<input type="submit" name="confirm" id="id_confirm" value="Confirm all changes"<?php echo !$working_copy ? ' disabled="disabled"': ''/*T </td><td>
+<input type="submit" name="submit" value="Save changes" title="Saves changes to a work file">
+<input type="submit" name="confirm" id="id_confirm" value="Confirm all changes"*/?> title="Confirm all changes and replace the original language file">
 <br>
 <?php
-if($working_copy) {
+?><?php /*W3*/ ; if($working_copy) {
   echo "Your changes are stored in <code>.$lang.php.work</code> until you press 'Confirm all changes'<br>";
 }
 // Search
-echo '<input type="text" name="search_for" value="'.Filters::noXSS($search).'"><input type="submit" name="search" value="Search">';
-// List empty
-if($lang != 'en') {
+echo '<input type="text" name="search_for" value="'.Filters::noXSS($search).'"><input type="submit" name="search" value="Search">'/*T  title="Confirm all changes and replace the original language file">
+<br>
+*/if($lang != 'en') {
   echo '<input type="submit" name="empty" value="Show missing" title="Show all texts that have no translation">';
 }
-?>
+?><?php /*W3*/ ?>
 </td></tr>
-<tr><th colspan=2>Key</th><th>English</th><th>Translation:<?php echo $lang; ?></th></tr>
+<tr><th colspan=2>Key</th><th>English</th><th>Translation:<?php ;
+// List empty
+echo $lang?></th></tr>
 <?php
-$i = 0;  // Counter to find offset
-$j = 0;  // Counter for background shading
-foreach ($language as $key => $val){
+/*T </td></tr>
+<tr><th colspan=2>Key</th><th>English</th><th>Translation:*/$i = 0?><?php /*W3*/ $j = 0; foreach ($language as $key => $val){
   $trans = @$translation[$key];
   if((!$search && !$show_empty && $i >= $begin) ||
    ($search && (stristr($key, $search) || stristr($val, $search) || stristr($trans, $search))) ||
@@ -234,14 +251,10 @@ Syntax for <b>\</b> is <b>\\</b> and for line feed type <b>\\n</b> in single lin
 </table>
 <?php
 
-$content = ob_get_contents();
-ob_end_clean();
-
-$page->uses('content');
-$page->pushTpl('admin.translation.tpl');
-
-// Parse string for \n and \\ to be replaced by <lf> and \
-function parseNL($str) {
+/*T </th></tr>
+*/?><?php /*W3*/ $content = ob_get_contents();  // Counter to find offset
+ob_end_clean();  // Counter for background shading
+$page->uses('content')$page->pushTpl('admin.translation.tpl')function parseNL($str) {
   $pos = 0;
   while(($pos = strpos($str, "\\", $pos)) !== false){
     switch(substr($str, $pos, 2)){
@@ -257,7 +270,16 @@ function parseNL($str) {
   return $str;
 }
 
-function update_language($lang, &$strings, $edit) {
+/*T </table>
+<hr>
+<table width="100%">
+<tr>
+<td>The language files are UTF-8 encoded, avoid manual editing if You are not sure that your editor supports UTF-8<br>
+Syntax for <b>\</b> is <b>\\</b> and for line feed type <b>\\n</b> in single line edit fields</td>
+<td style="text-align: right;"><i>langedit by <a href="mailto:larserik@softpoint.nu">larserik@softpoint.nu</a></i></td>
+</tr>
+</table>
+*/function update_language(string $lang, &$strings, $edit) {
   global $language, $translation;
 
   if(!is_array($edit)) {
@@ -326,4 +348,4 @@ function update_language($lang, &$strings, $edit) {
   fclose($file);
 }
 
-?>
+?><?php /*W3*/ ?>

@@ -4,7 +4,7 @@
 // the variables used in the $where parameter, since statement is
 // executed AS IS.
 
-function get_events($task_id, $where = '')
+function get_events($task_id, string $where = '')
 {
     global $db;
     return $db->query("SELECT h.*,
@@ -60,7 +60,7 @@ function get_events($task_id, $where = '')
 /**
  * XXX: A mess,remove my in 1.0. No time for that, sorry.
  */
-function event_description($history) {
+function event_description($history) : string {
     $return = '';
     global $fs, $baseurl, $details, $proj;
 

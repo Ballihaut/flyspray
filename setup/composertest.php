@@ -10,7 +10,7 @@ define('OBJECTS_PATH', APPLICATION_PATH . '/includes');
 define('TEMPLATE_FOLDER', BASEDIR . '/templates/');
 
 require_once OBJECTS_PATH.'/i18n.inc.php';
-class user{var $infos=array();}; class project{var $id=0;};
+class user{var array $infos=array();}; class project{var int $id=0;};
 $user=new user; $proj=new project;
 load_translations();
 
@@ -36,8 +36,18 @@ header("Pragma: no-cache");
 </head>
 <body style="padding:2em;"><img src="../flyspray.png" style="display:block;margin:auto;">
 		<h2>It seems you try to install a development version of Flyspray.</h2>
-		<h2><?php echo L('needcomposer'); ?></h2>
-		<a href="<?php echo $composerit; ?>" class="button" style="margin:auto;max-width:300px;text-align:center;display:block;font-size:2em;"><?php echo L('installcomposer'); ?></a>
+		<h2><?php /*T <!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>Flyspray Install - Third Party Packages needed</title>
+	<link media="screen" href="../themes/CleanFS/theme.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="padding:2em;"><img src="../flyspray.png" style="display:block;margin:auto;">
+		<h2>It seems you try to install a development version of Flyspray.</h2>
+		<h2>*/echo L('needcomposer')?><?php /*W3*/ ?></h2>
+		<a href="<?php ; echo $composerit/*T </h2>
+		<a href="*/?>" class="button" style="margin:auto;max-width:300px;text-align:center;display:block;font-size:2em;"><?php ?><?php /*W3*/ ; echo L('installcomposer')?></a>
 		<p style="margin-top:50px;">
 			In case the above solution doesn't work for you, use ssh to login to your server, move to the root directory of your unpacked flyspray sources and execute this:
 		</p>
@@ -61,7 +71,7 @@ php5.6 composer.phar install
 	<h2>README.md</h2>
 	<div id="content">
 		<pre>
-		<?php echo file_get_contents('../README.md'); ?>
+		<?php /*T " class="button" style="margin:auto;max-width:300px;text-align:center;display:block;font-size:2em;">*/?><?php /*W3*/ echo file_get_contents('../README.md'); ?>
 		</pre>
 	</div>
 </body>

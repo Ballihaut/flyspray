@@ -78,7 +78,7 @@ class dokuwiki_TextFormatter
         
         return $return;
     }
-    static function textarea( $name, $rows, $cols, $attrs = null, $content = null) {
+    static function textarea( string $name, $rows, $cols, $attrs = null, $content = null) : string {
     	
     	$name = htmlspecialchars($name, ENT_QUOTES, 'utf-8');
         $rows = intval($rows);
@@ -105,7 +105,7 @@ class dokuwiki_TextFormatter
 	 *
 	 * @param string $textareaId
 	 */
-	static function getDokuWikiToolbar( $textareaId ) {
+	static function getDokuWikiToolbar( string $textareaId ) : string {
 		global $conf, $baseurl;
 		$out='';
 		

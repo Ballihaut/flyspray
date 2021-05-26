@@ -6,11 +6,11 @@ if (!defined('IN_FS')) {
 
 class Tpl
 {
-	public $_uses  = array();
+	public array $_uses  = array();
 	public $_vars  = array();
-	public $_theme = '';
-	public $_tpls  = array();
-	public $_title = "";
+	public string $_theme = '';
+	public array $_tpls  = array();
+	public string $_title = "";
 
 	public function uses()
 	{
@@ -52,7 +52,7 @@ class Tpl
 	}
 
 	public function themeUrl()
-	{
+	: string {
 		return sprintf('%sthemes/%s', $GLOBALS['baseurl'], $this->_theme);
 	}
 
@@ -119,10 +119,10 @@ class Tpl
 
 class FSTpl extends Tpl
 {
-    public $_uses = array('fs', 'conf', 'baseurl', 'language', 'proj', 'user');
+    public array $_uses = array('fs', 'conf', 'baseurl', 'language', 'proj', 'user');
 
-    public function get_image($name, $base = true)
-	{
+    public function get_image(string $name, bool $base = true)
+	: string {
         global $proj, $baseurl;
         $pathinfo = pathinfo($name);
         $link = sprintf('themes/%s/', $proj->prefs['theme_style']);
@@ -154,8 +154,8 @@ class FSTpl extends Tpl
  *
  * @return string
  */
-function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
-{
+function tpl_form(string $action, $name=null, $method=null, $enctype=null, string $attr='')
+: string {
         global $baseurl;
 
         if (null === $method) {
@@ -184,7 +184,7 @@ function tpl_form($action, $name=null, $method=null, $enctype=null, $attr='')
  *
  * @return string ready for html output
  */
-function tpl_tasklink($task, $text = null, $strict = false, $attrs = array(), $title = array('status','summary','percent_complete'))
+function tpl_tasklink($task, $text = null, bool $strict = false, $attrs = array(), array $title = array('status','summary','percent_complete'))
 {
     global $user;
 
@@ -339,7 +339,7 @@ function tpl_userlink($uid)
 * @param string class optional, avoid calling with class parameter for better 'cacheability'
 * @param string style optional, avoid calling with style parameter for better 'cacheability'
 */
-function tpl_userlinkavatar($uid, $size, $class='', $style='')
+function tpl_userlinkavatar($uid, $size, string $class='', string $style='')
 {
 	global $db, $user, $baseurl, $fs;
 
@@ -400,7 +400,7 @@ function tpl_fast_tasklink($arr)
  *
  * @return string ready for output
  */
-function tpl_tag($id, $showid=false) {
+function tpl_tag($id, bool $showid=false) : string {
 	global $alltags;
 
 	if(!is_array($alltags)) {
@@ -453,7 +453,7 @@ function tpl_tag($id, $showid=false) {
 *
 * function is adapted from an exmaple on http://php.net/manual/de/function.hexdec.php
 */
-function hex2RGB($hexstr, $returnasstring = false, $seperator = ',') {
+function hex2RGB($hexstr, bool $returnasstring = false, $seperator = ',') {
     $hexstr = preg_replace("/[^0-9A-Fa-f]/", '', $hexstr); // Gets a proper hex string
     $rgb = array();
     if (strlen($hexstr) == 6) { // if a proper hex code, convert using bitwise operation. No overhead... faster
@@ -478,7 +478,7 @@ function hex2RGB($hexstr, $returnasstring = false, $seperator = ',') {
  *
  * @return string
  */
-function join_attrs($attr = null) {
+function join_attrs($attr = null) : string {
     if (is_array($attr) && count($attr)) {
         $arr = array();
         foreach ($attr as $key=>$val) {
@@ -492,7 +492,7 @@ function join_attrs($attr = null) {
 /**
  * Datepicker
  */
-function tpl_datepicker($name, $label = '', $value = 0) {
+function tpl_datepicker($name, string $label = '', $value = 0) {
     global $user, $page;
 
     $date = '';
@@ -547,7 +547,7 @@ function tpl_datepicker($name, $label = '', $value = 0) {
 /**
  * user selector
  */
-function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
+function tpl_userselect($name, $value = null, string $id = '', array $attrs = array()) {
     global $db, $user, $proj;
 
     if (!$id) {
@@ -579,8 +579,8 @@ function tpl_userselect($name, $value = null, $id = '', $attrs = array()) {
  * @selected The format that should by selected by default
  * @return html formatted options for a select tag
 **/
-function tpl_date_formats($selected, $detailed = false)
-{
+function tpl_date_formats($selected, bool $detailed = false)
+: string {
 	$time = time();
 
 	# TODO: rewrite using 'return tpl_select(...)'
@@ -671,8 +671,8 @@ function tpl_date_formats($selected, $detailed = false)
  * 	array(5,'project5',0)  # inactive project optgroup
  * ); tpl_options($options, 2)
 */
-function tpl_options($options, $selected = null, $labelIsValue = false, $attr = null, $remove = null)
-{
+function tpl_options($options, $selected = null, bool $labelIsValue = false, $attr = null, $remove = null)
+: string {
 	$html = '';
 
 	// force $selected to be an array.
@@ -780,7 +780,7 @@ function tpl_options($options, $selected = null, $labelIsValue = false, $attr = 
         )
   )
  */
-function tpl_select($select=array()){
+function tpl_select($select=array()): string {
 
 	if(isset($select['name'])){
 		$name=' name="'.$select['name'].'"';
@@ -818,7 +818,7 @@ function tpl_select($select=array()){
  *
  * @example see [options]-array of example of tpl_select()
  */
-function tpl_selectoptions($options=array(), $level=0){
+function tpl_selectoptions(array $options=array(), int $level=0){
 	$html='';
 	# such deep nesting is too weired - probably an endless loop lets
 	# return before something bad happens
@@ -873,8 +873,8 @@ function tpl_selectoptions($options=array(), $level=0){
  * @param bool labelisvalue
  * @param bool updown
  */
-function tpl_double_select($name, $options, $selected = null, $labelisvalue = false, $updown = true)
-{
+function tpl_double_select($name, $options, $selected = null, bool $labelisvalue = false, bool $updown = true)
+: string {
     static $_id = 0;
     static $tpl = null;
 
@@ -942,8 +942,8 @@ function tpl_double_select($name, $options, $selected = null, $labelisvalue = fa
  *
  * @return string for ready for HTML output
  */
-function tpl_checkbox($name, $checked = false, $id = null, $value = 1, $attr = null)
-{
+function tpl_checkbox($name, bool $checked = false, $id = null, $value = 1, $attr = null)
+: string {
 	$name  = htmlspecialchars($name,  ENT_QUOTES, 'utf-8');
 	$value = htmlspecialchars($value, ENT_QUOTES, 'utf-8');
 	$html  = sprintf('<input type="checkbox" name="%s" value="%s" ', $name, $value);
@@ -960,7 +960,7 @@ function tpl_checkbox($name, $checked = false, $id = null, $value = 1, $attr = n
 /**
  * Image display
  */
-function tpl_img($src, $alt = '')
+function tpl_img(string $src, string $alt = '')
 {
     global $baseurl;
     if (is_file(BASEDIR .'/'.$src)) {
@@ -983,7 +983,7 @@ if(isset($conf['general']['syntax_plugin'])) {
 class TextFormatter
 {
     public static function get_javascript()
-    {
+    : iterable {
         global $conf;
 
         $path_to_plugin = sprintf('%s/plugins/%s', BASEDIR, $conf['general']['syntax_plugin']);
@@ -1070,7 +1070,7 @@ class TextFormatter
  *
  * Questionable if this function belongs in this class. Usages also elsewhere and not UI-related.
  */
-function formatDate($timestamp, $extended = false, $default = '')
+function formatDate(int $timestamp, bool $extended = false, string $default = '')
 {
     global $db, $conf, $user, $fs;
 
@@ -1180,7 +1180,7 @@ function tpl_draw_perms($perms)
  * @author Andreas Gohr <andi@splitbrain.org>
  * @author Harry Fuecks <hfuecks@gmail.com>
  */
-function html_hilight($html,$query){
+function html_hilight($html,string $query){
   //split at common delimiters
   $queries = preg_split ('/[\s\'"\\\\`()\]\[?:!\.{};,#+*<>]+/',$query,-1,PREG_SPLIT_NO_EMPTY);
   foreach ($queries as $q){
@@ -1195,7 +1195,7 @@ function html_hilight($html,$query){
  *
  * @author Harry Fuecks <hfuecks@gmail.com>
  */
-function html_hilight_callback($m) {
+function html_hilight_callback($m) : string {
   $hlight = unslash($m[0]);
   if ( !isset($m[2])) {
     $hlight = '<span class="search_hit">'.$hlight.'</span>';
@@ -1209,7 +1209,7 @@ function html_hilight_callback($m) {
  * @param bool if something that PHP sees as true or false
  */
 function tpl_disableif ($if)
-{
+: string {
     if ($if) {
         return 'disabled="disabled"';
     }
@@ -1221,7 +1221,7 @@ function tpl_disableif ($if)
  * Create an URL based upon address-rewriting preferences
  *
  */
-function createURL($type, $arg1 = null, $arg2 = null, $arg3 = array())
+function createURL(string $type, $arg1 = null, $arg2 = null, $arg3 = array())
 {
     global $baseurl, $conf, $fs;
 
@@ -1466,7 +1466,7 @@ function pagenums($pagenum, $perpage, $totalcount)
 }
 
 class Url {
-    public $url = '';
+    public string $url = '';
     public $parsed;
 
     public function __construct($url = '') {
@@ -1479,7 +1479,7 @@ class Url {
         $this->parsed = parse_url($this->url);
     }
 
-    public function getinfo($type = null) {
+    public function getinfo($type = null) : string {
         if (is_null($type)) {
             return $this->parsed;
         } elseif (isset($this->parsed[$type])) {
@@ -1493,7 +1493,7 @@ class Url {
         $this->parsed[$type] = $value;
     }
 
-    public function addfrom($method = 'get', $vars = array()) {
+    public function addfrom(string $method = 'get', array $vars = array()) {
         $append = '';
         foreach($vars as $key) {
             $append .= http_build_query( (($method == 'get') ? Get::val($key) : Post::val($key)) ) . '&';
@@ -1512,7 +1512,7 @@ class Url {
         }
     }
 
-    public function addvars($vars = array()) {
+    public function addvars(array $vars = array()) {
         $append = http_build_query($vars);
 
         $separator = ini_get('arg_separator.output');
@@ -1527,7 +1527,7 @@ class Url {
         }
     }
 
-    public function get($fullpath = true) {
+    public function get(bool $fullpath = true) {
         $return = '';
         if ($fullpath) {
             $return .= $this->getinfo('scheme') . '://' . $this->getinfo('host');

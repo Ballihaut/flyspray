@@ -1,16 +1,5 @@
 <?php
 /**
-* Author Markus Baker: http://www.lastcraft.com
-* Version adapted from Simple Test: http://sourceforge.net/projects/simpletest/
-* For an intro to the Lexer see:
-* http://www.phppatterns.com/index.php/article/articleview/106/1/2/
-* @author Marcus Baker
-* @package Doku
-* @subpackage Lexer
-* @version $Id$
-*/
-
-/**
 * Init path constant
 */
 if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
@@ -33,8 +22,8 @@ define("DOKU_LEXER_SPECIAL", 5);
  *    @subpackage Lexer
  */
 class Doku_LexerParallelRegex {
-    var $_patterns;
-    var $_labels;
+    var array $_patterns;
+    var array $_labels;
     var $_regex;
     var $_case;
 
@@ -62,7 +51,7 @@ class Doku_LexerParallelRegex {
      *                                on a match. Label must be ASCII
      *    @access public
      */
-    function addPattern($pattern, $label = true) {
+    function addPattern($pattern, bool $label = true) {
 		$duplicate = false;
 		// Nux: check if not duplicate
 		// Note! This prevents regexp overflow when viewing Flyspray issues with  many comments
@@ -91,7 +80,7 @@ class Doku_LexerParallelRegex {
      *    @return boolean             True on success.
      *    @access public
      */
-    function match($subject, &$match) {
+    function match(string $subject, &$match) : bool {
         if (count($this->_patterns) == 0) {
             return false;
         }
@@ -120,7 +109,7 @@ class Doku_LexerParallelRegex {
      *
      *    @author Christopher Smith <chris@jalakai.co.uk>
      */
-    function explode($subject, &$split) {
+    function explode(string $subject, &$split) : bool {
         if (count($this->_patterns) == 0) {
             return false;
         }
@@ -216,7 +205,7 @@ class Doku_LexerParallelRegex {
      *    @return string       Perl regex flags.
      *    @access private
      */
-    function _getPerlMatchingFlags() {
+    function _getPerlMatchingFlags() : string {
         return ($this->_case ? "msS" : "msSi");
     }
 }
@@ -227,7 +216,7 @@ class Doku_LexerParallelRegex {
  *    @subpackage Lexer
  */
 class Doku_LexerStateStack {
-    var $_stack;
+    var array $_stack;
 
     /**
      *    Constructor. Starts in named state.
@@ -264,7 +253,7 @@ class Doku_LexerStateStack {
      *                       the bottom of the list.
      *    @access public
      */
-    function leave() {
+    function leave() : bool {
         if (count($this->_stack) == 1) {
             return false;
         }
@@ -283,11 +272,11 @@ class Doku_LexerStateStack {
  *    @subpackage Lexer
  */
 class Doku_Lexer {
-    var $_regexes;
+    var array $_regexes;
     var $_parser;
     var $_mode;
-    var $_mode_handlers;
-    var $_case;
+    var array $_mode_handlers;
+    var bool $_case;
 
     /**
      *    Sets up the lexer in case insensitive matching
@@ -371,7 +360,7 @@ class Doku_Lexer {
      *    @param string $special      Use this mode for this one token.
      *    @access public
      */
-    function addSpecialPattern($pattern, $mode, $special) {
+    function addSpecialPattern($pattern, $mode, string $special) {
         if (! isset($this->_regexes[$mode])) {
             $this->_regexes[$mode] = new Doku_LexerParallelRegex($this->_case);
         }
@@ -398,7 +387,7 @@ class Doku_Lexer {
      *    @return boolean           True on success, else false.
      *    @access public
      */
-    function parse($raw) {
+    function parse(string $raw) {
         if (! isset($this->_parser)) {
             return false;
         }
@@ -470,7 +459,7 @@ class Doku_Lexer {
      *    @return boolean        True if this is the exit mode.
      *    @access private
      */
-    function _isModeEnd($mode) {
+    function _isModeEnd($mode) : bool {
         return ($mode === "__exit");
     }
 
@@ -482,7 +471,7 @@ class Doku_Lexer {
      *    @return boolean        True if this is the exit mode.
      *    @access private
      */
-    function _isSpecialMode($mode) {
+    function _isSpecialMode(string $mode) : bool {
         return (strncmp($mode, "_", 1) == 0);
     }
 
@@ -493,7 +482,7 @@ class Doku_Lexer {
      *    @return string         Underlying mode name.
      *    @access private
      */
-    function _decodeSpecial($mode) {
+    function _decodeSpecial(string $mode) : string {
         return substr($mode, 1);
     }
 
@@ -508,7 +497,7 @@ class Doku_Lexer {
      *                                thats being parsed
      *    @access private
      */
-    function _invokeParser($content, $is_match, $pos) {
+    function _invokeParser($content, $is_match, $pos) : bool {
         if (($content === "") || ($content === false)) {
             return true;
         }

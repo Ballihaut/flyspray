@@ -37,7 +37,7 @@ require_once OBJECTS_PATH . '/class.gpc.php';
 require_once OBJECTS_PATH . '/i18n.inc.php';
 
 # fake objects for load_translation()
-class user{var $infos=array();}; class project{var $id=0;};
+class user{var array $infos=array();}; class project{var int $id=0;};
 $user=new user; $proj=new project;
 load_translations();
 
@@ -141,8 +141,8 @@ if (Post::val('upgrade')) {
     $page->assign('upgradelog', $uplog);
 }
 
-function execute_upgrade_file($folder, $installed_version)
-{
+function execute_upgrade_file(string $folder, $installed_version)
+: string {
     global $db, $page, $conf;
     // At first the config file
     $upgrade_path = BASEDIR . '/upgrade/' . $folder;
@@ -212,7 +212,7 @@ function execute_upgrade_file($folder, $installed_version)
   * @license     Public Domain.
   */
 
- function rmdirr($dirname)
+ function rmdirr(string $dirname)
  {
      // Sanity check
      if (!file_exists($dirname)) {
@@ -251,8 +251,8 @@ class ConfUpdater
      * @access public
      * @return bool
      */
-    function ConfUpdater($location, $upgrade_path)
-    {
+    function ConfUpdater(string $location, string $upgrade_path)
+    : bool {
         if (!is_writable($location)) {
             return false;
         }
@@ -303,7 +303,7 @@ class ConfUpdater
      * @param string $location
      * @access private
      */
-    function _write_config($location)
+    function _write_config(string $location)
     {
         $new_config = "; <?php die( 'Do not access this page directly.' ); ?>\n\n";
         foreach ($this->new_config as $group => $settings) {
@@ -326,7 +326,7 @@ class ConfUpdater
     }
 }
 
-function postgresql_adodb() {
+function postgresql_adodb() : bool {
     if (class_exists('ReflectionClass')) {
         require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/adodb-datadict.inc.php';
         require_once dirname(__DIR__) . '/vendor/adodb/adodb-php/datadict/datadict-postgres.inc.php';
@@ -384,7 +384,7 @@ $page->display('upgrade.tpl');
 // Functions for checking and fixing possible duplicate entries
 // in database for those tables that now have a unique index.
 
-function fix_duplicate_list_entries($doit=true) {
+function fix_duplicate_list_entries(bool $doit=true) {
     global $db,$uplog;
 
     // Categories need a bit more thinking. A real life example from
@@ -461,7 +461,7 @@ function fix_duplicate_list_entries($doit=true) {
     }
 }
 
-function fix_os_table($dups) {
+function fix_os_table(iterable $dups) {
     global $db;
 
     foreach ($dups as $dup) {
@@ -486,7 +486,7 @@ function fix_os_table($dups) {
     }
 }
 
-function fix_resolution_table($dups) {
+function fix_resolution_table(iterable $dups) {
     global $db;
 
     foreach ($dups as $dup) {
@@ -511,7 +511,7 @@ function fix_resolution_table($dups) {
     }
 }
 
-function fix_status_table($dups) {
+function fix_status_table(iterable $dups) {
     global $db;
 
     foreach ($dups as $dup) {
@@ -536,7 +536,7 @@ function fix_status_table($dups) {
     }
 }
 
-function fix_tasktype_table($dups) {
+function fix_tasktype_table(iterable $dups) {
     global $db;
 
     foreach ($dups as $dup) {
@@ -561,7 +561,7 @@ function fix_tasktype_table($dups) {
     }
 }
 
-function fix_version_table($dups) {
+function fix_version_table(iterable $dups) {
     global $db;
 
     foreach ($dups as $dup) {
@@ -589,7 +589,7 @@ function fix_version_table($dups) {
 // Just a sketch on how database columns could be updated to the new format.
 // Not tested for errors or used anywhere yet.
 
-function convert_old_entries($table, $column, $key) {
+function convert_old_entries(string $table, $column, $key) {
     global $db;
 
     // Assuming that anything not beginning with < was made with older

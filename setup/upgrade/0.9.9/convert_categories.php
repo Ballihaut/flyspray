@@ -4,7 +4,7 @@
    | format.                                                   |
    \***********************************************************/
    
-function rebuild_tree($parent, $left, $pr) {
+function rebuild_tree($parent, int $left, $pr) : int {
     global $db;
    // the right value of this node is the left value + 1
    $right = $left+1;

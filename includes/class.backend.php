@@ -27,8 +27,8 @@ abstract class Backend
      * @return bool
      * @version 1.0
      */
-    public static function add_notification($user_id, $tasks, $do = false)
-    {
+    public static function add_notification($user_id, $tasks, bool $do = false)
+    : bool {
         global $db, $user;
 
         settype($tasks, 'array');
@@ -183,7 +183,7 @@ abstract class Backend
      * @return void
      * @version 1.0
      */
-    public static function add_to_assignees($user_id, $tasks, $do = false)
+    public static function add_to_assignees($user_id, $tasks, bool $do = false)
     {
         global $db, $notify;
 
@@ -233,7 +233,7 @@ abstract class Backend
      * @version 1.0
      */
     public static function add_vote($user_id, $task_id)
-    {
+    : bool {
         global $db;
 
         $user = $GLOBALS['user'];
@@ -267,7 +267,7 @@ abstract class Backend
      * @version 1.0
      */
     public static function remove_vote($user_id, $task_id)
-    {
+    : bool {
         global $db;
 
         $user = $GLOBALS['user'];
@@ -302,7 +302,7 @@ abstract class Backend
      * @version 1.0
      */
     public static function add_comment($task, $comment_text, $time = null)
-    {
+    : bool {
         global $conf, $db, $user, $notify, $proj, $fs;
 
         if (!($user->perms('add_comments', $task['project_id']) && (!$task['is_closed'] || $user->perms('comment_closed', $task['project_id'])))) {
@@ -349,8 +349,8 @@ abstract class Backend
      * @return bool
      * @version 1.0
      */
-    public static function upload_files($task_id, $comment_id = 0, $source = 'userfile')
-    {
+    public static function upload_files(string $task_id, int $comment_id = 0, $source = 'userfile')
+    : bool {
         global $db, $notify, $conf, $user;
 
         $task = Flyspray::getTaskDetails($task_id);
@@ -412,8 +412,8 @@ abstract class Backend
         return $res;
     }
 
-    public static function upload_links($task_id, $comment_id = 0, $source = 'userlink')
-    {
+    public static function upload_links($task_id, int $comment_id = 0, $source = 'userlink')
+    : bool {
 	    global $db, $user;
 
 	    $task = Flyspray::getTaskDetails($task_id);
@@ -522,7 +522,7 @@ abstract class Backend
         return utf8_keepalphanum($user_name);
     }
 
-    public static function getAdminAddresses() {
+    public static function getAdminAddresses() : array {
         global $db;
 
         $emails = array();
@@ -541,7 +541,7 @@ abstract class Backend
         return array($emails, $jabbers, $onlines);
     }
 
-    public static function getProjectManagerAddresses($project_id) {
+    public static function getProjectManagerAddresses($project_id) : array {
         global $db;
  
         $emails = array();
@@ -575,8 +575,8 @@ abstract class Backend
      * @version 1.0
      * @notes This function does not have any permission checks (checked elsewhere)
      */
-    public static function create_user($user_name, $password, $real_name, $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, $oauth_uid = '', $oauth_provider = '', $profile_image = '')
-    {
+    public static function create_user($user_name, $password, $real_name, string $jabber_id, $email, $notify_type, $time_zone, $group_in, $enabled, string $oauth_uid = '', string $oauth_provider = '', string $profile_image = '')
+    : bool {
         global $fs, $db, $notify, $baseurl;
 
         $user_name = Backend::clean_username($user_name);
@@ -741,7 +741,7 @@ abstract class Backend
 	 * @version 1.0
 	 */
 	public static function delete_user($uid)
-	{
+	: bool {
 		global $db, $user;
 
 		if (!$user->perms('is_admin')) {
@@ -797,7 +797,7 @@ abstract class Backend
      * @version 1.0
      */
     public static function delete_project($pid, $move_to = 0)
-    {
+    : bool {
         global $db, $user;
 
         if (!$user->perms('manage_project', $pid)) {
@@ -927,7 +927,7 @@ abstract class Backend
      * @version 1.0
      */
     public static function add_reminder($task_id, $message, $how_often, $start_time, $user_id = null)
-    {
+    : bool {
         global $user, $db;
         $task = Flyspray::getTaskDetails($task_id);
 
@@ -1243,8 +1243,8 @@ abstract class Backend
      * @return bool
      * @version 1.0
      */
-    public static function close_task($task_id, $reason, $comment, $mark100 = true)
-    {
+    public static function close_task($task_id, $reason, string $comment, bool $mark100 = true)
+    : bool {
         global $db, $notify, $user, $proj;
         $task = Flyspray::getTaskDetails($task_id);
 
@@ -1308,7 +1308,7 @@ abstract class Backend
      * @return array
      * @version 1.0
      */
-    public static function get_task_list($args, $visible, $offset = 0, $perpage = 20) {
+    public static function get_task_list($args, array $visible, int $offset = 0, int $perpage = 20) : array {
         global $fs, $proj, $db, $user, $conf;
         /* build SQL statement {{{ */
         // Original SQL courtesy of Lance Conry http://www.rhinosw.com/

@@ -2,8 +2,8 @@
 
 class Project
 {
-	var $id = 0;
-	var $prefs = array();
+	var int $id = 0;
+	var array $prefs = array();
 
 	function __construct($id)
 	{
@@ -104,8 +104,8 @@ class Project
 	/**
 	* private method
 	*/
-    function _pm_list_sql($type, $join)
-    {
+    function _pm_list_sql(string $type, $join)
+    : string {
         global $db;
 
         // deny the possibility of shooting ourselves in the foot.
@@ -135,8 +135,8 @@ class Project
      * @return string
      * @notes The $where parameter is dangerous, think twice what you pass there..
      */
-    function _list_sql($type, $where = null)
-    {
+    function _list_sql(string $type, $where = null)
+    : string {
         // sanity check.
         if(preg_match('![^A-Za-z0-9_]!', $type)) {
             return '';
@@ -149,7 +149,7 @@ class Project
               ORDER BY  list_position";
     }
 
-    function listTaskTypes($pm = false)
+    function listTaskTypes(bool $pm = false)
     {
         global $db;
         if ($pm) {
@@ -163,7 +163,7 @@ class Project
         }
     }
 
-    function listOs($pm = false)
+    function listOs(bool $pm = false)
     {
         global $db;
         if ($pm) {
@@ -177,7 +177,7 @@ class Project
         }
     }
 
-    function listVersions($pm = false, $tense = null, $reported_version = null)
+    function listVersions(bool $pm = false, $tense = null, $reported_version = null)
     {
         global $db;
 
@@ -210,8 +210,8 @@ class Project
     }
 
 
-    function listCategories($project_id = null, $hide_hidden = true, $remove_root = true, $depth = true)
-    {
+    function listCategories($project_id = null, bool $hide_hidden = true, bool $remove_root = true, bool $depth = true)
+    : array {
         global $db, $conf;
 
         // start with a empty arrays
@@ -277,7 +277,7 @@ class Project
         return array_merge($cats, $g_cats);
     }
 
-    function listResolutions($pm = false)
+    function listResolutions(bool $pm = false)
     {
         global $db;
         if ($pm) {
@@ -291,7 +291,7 @@ class Project
         }
     }
 
-    function listTaskStatuses($pm = false)
+    function listTaskStatuses(bool $pm = false)
     {
         global $db;
         if ($pm) {
@@ -332,7 +332,7 @@ class Project
         }
 	*/
 	/* rewrite of tags feature, FS1.0beta1 */ 
-	function listTags($pm = false)
+	function listTags(bool $pm = false)
 	{
 		global $db;
 		if ($pm) {
@@ -356,7 +356,7 @@ class Project
     // This should really be moved to class Flyspray like some other ones too.
     // Something todo for 1.1.
     static function listUsersIn($group_id = null)
-    {
+    : iterable {
         global $db;
         return $db->cached_query(
                 'users_in'.(is_null($group_id) ? $group_id : intval($group_id)),
@@ -442,7 +442,7 @@ class Project
      * @return array used to get the count
      * @access public
      */
-    static function getDayActivityByProject($date_start, $date_end, $project_id) {
+    static function getDayActivityByProject(string $date_start, $date_end, $project_id) : array {
         global $db;
         //NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';

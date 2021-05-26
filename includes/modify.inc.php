@@ -24,7 +24,7 @@ if (strlen($lt)) {
 
 function Post_to0($key) { return Post::val($key, 0); }
 
-function resizeImage($file, $max_x, $max_y, $forcePng = false)
+function resizeImage(string $file, $max_x, $max_y, bool $forcePng = false)
 {
 	if ($max_x <= 0 || $max_y <= 0) {
 		$max_x = 5;
@@ -560,7 +560,7 @@ switch ($action = Req::val('action'))
                 $new_assignees = array_diff($task['assigned_to'], $assignees);
                 // Remove current user from notification list
                 if (!$user->infos['notify_own']) {
-                    $new_assignees = array_filter($new_assignees, function($u) use($user) { return $user->id != $u; } );
+                    $new_assignees = array_filter($new_assignees, function($u) use($user) : bool { return $user->id != $u; } );
                 }
                 if(count($new_assignees)) {
                     $notify->create(NOTIFY_NEW_ASSIGNEE, $task['task_id'], null, $notify->specificAddresses($new_assignees), NOTIFY_BOTH, $proj->prefs['lang_code']);

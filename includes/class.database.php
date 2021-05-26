@@ -23,7 +23,7 @@ class Database
      * @var string
      * @access private
      */
-    public $dbprefix;
+    public string $dbprefix;
 
     /**
      * Cache for queries done by cached_query()
@@ -31,7 +31,7 @@ class Database
      * @access private
      * @see cached_query();
      */
-    private $cache = array();
+    private array $cache = array();
 
     /**
      * dblink
@@ -67,7 +67,7 @@ class Database
      * "pdo_mysql" and "pdo_pgsql" experimental
      * @param string $dbprefix database prefix.
      */
-    public function dbOpen($dbhost = '', $dbuser = '', $dbpass = '', $dbname = '', $dbtype = '', $dbprefix = '')
+    public function dbOpen(string $dbhost = '', string $dbuser = '', string $dbpass = '', string $dbname = '', $dbtype = '', string $dbprefix = '')
     {
 
         $this->dbtype   = $dbtype;
@@ -210,7 +210,7 @@ class Database
      * @return void
      */
 
-    public function query($sql, $inputarr = false, $numrows = -1, $offset = -1)
+    public function query($sql, $inputarr = false, int $numrows = -1, int $offset = -1)
     {
         // auto add $dbprefix where we have {table}
         $sql = $this->_add_prefix($sql);
@@ -261,7 +261,7 @@ class Database
      * @access public
      * @return array
      */
-    public function cached_query($idx, $sql, $sqlargs = array())
+    public function cached_query($idx, $sql, array $sqlargs = array())
     {
         if (isset($this->cache[$idx])) {
             return $this->cache[$idx];
@@ -308,7 +308,7 @@ class Database
      * @return array process the returned array with foreach ($return as $row) {}
      */
     public function groupBy($result, $column)
-    {
+    : array {
         $rows = array();
         while ($row = $this->fetchRow($result)) {
             $rows[$row[$column]] = $row;
@@ -326,8 +326,8 @@ class Database
      * @return void
      */
 
-    public function getColumnNames($table, $alt, $prefix)
-    {
+    public function getColumnNames($table, $alt, string $prefix)
+    : string {
         global $conf;
 
         if (strcasecmp($conf['database']['dbtype'], 'pgsql')) {
@@ -363,7 +363,7 @@ class Database
      * @access public
      * @return integer 0 on error, 1 on update. 2 on insert
      */
-    public function replace($table, $field, $keys, $autoquote = true)
+    public function replace($table, $field, $keys, bool $autoquote = true)
     {
         $table = $this->_add_prefix($table);
         return $this->dblink->replace($table, $field, $keys, $autoquote);
@@ -389,8 +389,8 @@ class Database
      * @access public
      * @since 0.9.9
      */
-    public function quoteIdentifier($ident)
-    {
+    public function quoteIdentifier(string $ident)
+    : string {
         return (string) $this->dblink->nameQuote . $ident . $this->dblink->nameQuote ;
     }
 
@@ -420,7 +420,7 @@ class Database
      * @static
      */
     public function fill_placeholders($cols, $additional=0)
-    {
+    : string {
         if(is_array($cols) && count($cols) && is_int($additional)) {
 
             return join(',', array_fill(0, (count($cols) + $additional), '?'));

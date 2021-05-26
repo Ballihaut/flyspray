@@ -12,16 +12,16 @@ require_once(DOKU_INC.'inc/pluginutils.php');
 class Doku_Event {
 
   // public properties
-  var $name = '';                // READONLY  event name, objects must register against this name to see the event
+  var string $name = '';                // READONLY  event name, objects must register against this name to see the event
   var $data = NULL;              // READWRITE data relevant to the event, no standardised format (YET!)
   var $result = NULL;            // READWRITE the results of the event action, only relevant in "_AFTER" advise
                                  //    event handlers may modify this if they are preventing the default action
                                  //    to provide the after event handlers with event results
-  var $canPreventDefault = true; // READONLY  if true, event handlers can prevent the events default action
+  var bool $canPreventDefault = true; // READONLY  if true, event handlers can prevent the events default action
 
   // private properties, event handlers can effect these through the provided methods
-  var $_default = true;     // whether or not to carry out the default action associated with the event
-  var $_continue = true;    // whether or not to continue propagating the event to other handlers
+  var bool $_default = true;     // whether or not to carry out the default action associated with the event
+  var bool $_continue = true;    // whether or not to continue propagating the event to other handlers
 
   /**
    * event constructor
@@ -50,7 +50,7 @@ class Doku_Event {
    *
    * @return  results of processing the event, usually $this->_default
    */
-  function advise_before($enablePreventDefault=true) {
+  function advise_before(bool $enablePreventDefault=true) : bool {
     global $EVENT_HANDLER;
 
     $this->canPreventDefault = $enablePreventDefault;
@@ -79,7 +79,7 @@ class Doku_Event {
    *          or the results of the default action (as modified by <event>_after handlers)
    *          or NULL no action took place and no handler modified the value
    */
-  function trigger($action=NULL, $enablePrevent=true) {
+  function trigger($action=NULL, bool $enablePrevent=true) {
 
     if (!is_callable($action)) $enablePrevent = false;
 
@@ -118,7 +118,7 @@ class Doku_Event_Handler {
   // public properties:  none
 
   // private properties
-  var $_hooks = array();          // array of events and their registered handlers
+  var array $_hooks = array();          // array of events and their registered handlers
 
   /**
    * event_handler
@@ -150,11 +150,11 @@ class Doku_Event_Handler {
    * @PARAM  $method  (function) event handler function
    * @PARAM  $param   (mixed)    data passed to the event handler
    */ 
-  function register_hook($event, $advise, &$obj, $method, $param=NULL) {
+  function register_hook(string $event, string $advise, &$obj, $method, $param=NULL) {
     $this->_hooks[$event.'_'.$advise][] = array(&$obj, $method, $param);
   }
 
-  function process_event(&$event,$advise='') {
+  function process_event(&$event,string $advise='') {
 
     $evt_name = $event->name . ($advise ? '_'.$advise : '_BEFORE');
 
@@ -191,7 +191,7 @@ class Doku_Event_Handler {
  *                                         by default this is the return value of the default action however
  *                                         it can be set or modified by event handler hooks
  */
-function trigger_event($name, &$data, $action=NULL, $canPreventDefault=true) {
+function trigger_event($name, &$data, $action=NULL, bool $canPreventDefault=true) {
 
   $evt = new Doku_Event($name, $data);
   return $evt->trigger($action, $canPreventDefault);

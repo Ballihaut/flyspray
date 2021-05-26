@@ -26,7 +26,7 @@ define('RECENTS_SKIP_SUBSPACES',8);
  * @author Andreas Gohr <andi@splitbrain.org>
  * @see    htmlspecialchars()
  */
-function hsc($string){
+function hsc(string $string): string {
   return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
@@ -37,7 +37,7 @@ function hsc($string){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function ptln($string,$intend=0){
+function ptln(string $string,int $intend=0){
   for($i=0; $i<$intend; $i++) print ' ';
   echo "$string\n";
 }
@@ -150,7 +150,7 @@ function pageinfo(){
  *
  * @author Andreas Gohr
  */
-function buildURLparams($params, $sep='&amp;'){
+function buildURLparams(iterable $params, string $sep='&amp;'): string {
   $url = '';
   $amp = false;
   foreach($params as $key => $val){
@@ -170,7 +170,7 @@ function buildURLparams($params, $sep='&amp;'){
  *
  * @author Andreas Gohr
  */
-function buildAttributes($params){
+function buildAttributes(iterable $params): string {
   $url = '';
   foreach($params as $key => $val){
     if($key[0] == '_') continue;
@@ -246,7 +246,7 @@ function breadcrumbs(){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function idfilter($id,$ue=true){
+function idfilter($id,bool $ue=true): string {
   global $conf;
   if ($conf['useslash'] && $conf['userewrite']){
     $id = strtr($id,':','/');
@@ -270,7 +270,7 @@ function idfilter($id,$ue=true){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function wl($id='',$more='',$abs=false,$sep='&amp;'){
+function wl(string $id='',$more='',bool $abs=false,$sep='&amp;'){
   global $conf;
   if(is_array($more)){
     $more = buildURLparams($more,$sep);
@@ -306,7 +306,7 @@ function wl($id='',$more='',$abs=false,$sep='&amp;'){
  *
  * @author Ben Coburn <btcoburn@silicodon.net>
  */
-function exportlink($id='',$format='raw',$more='',$abs=false,$sep='&amp;'){
+function exportlink(string $id='',string $format='raw',$more='',bool $abs=false,$sep='&amp;'){
   global $conf;
   if(is_array($more)){
     $more = buildURLparams($more,$sep);
@@ -341,7 +341,7 @@ function exportlink($id='',$format='raw',$more='',$abs=false,$sep='&amp;'){
  *
  * Will return a link to the detail page if $direct is false
  */
-function ml($id='',$more='',$direct=true,$sep='&amp;'){
+function ml(string $id='',$more='',bool $direct=true,$sep='&amp;'){
   global $conf;
   if(is_array($more)){
     $more = buildURLparams($more,$sep);
@@ -404,7 +404,7 @@ function ml($id='',$more='',$direct=true,$sep='&amp;'){
  * @todo   maybe obsolete
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function script($script='doku.php'){
+function script(string $script='doku.php'): string {
 #  $link = getBaseURL();
 #  $link .= $script;
 #  return $link;
@@ -419,7 +419,7 @@ function script($script='doku.php'){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function checkwordblock(){
+function checkwordblock(): bool {
   global $TEXT;
   global $conf;
 
@@ -469,7 +469,7 @@ function checkwordblock(){
  * @param  boolean $single If set only a single IP is returned
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function clientIP($single=false){
+function clientIP(bool $single=false){
   $ip = array();
   $ip[] = $_SERVER['REMOTE_ADDR'];
   if(!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
@@ -555,7 +555,7 @@ function lock($id){
  * @author Andreas Gohr <andi@splitbrain.org>
  * @return bool true if a lock was removed
  */
-function unlock($id){
+function unlock($id): bool {
   $lock = wikiLockFN($id);
   if(@file_exists($lock)){
     $ip = io_readFile($lock);
@@ -573,7 +573,7 @@ function unlock($id){
  * @see    formText() for 2crlf conversion
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function cleanText($text){
+function cleanText($text): string {
   $text = preg_replace("/(\015\012)|(\015)/","\012",$text);
   return $text;
 }
@@ -586,7 +586,7 @@ function cleanText($text){
  * @see    cleanText() for 2unix conversion
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function formText($text){
+function formText($text): string {
   $text = preg_replace("/\012/","\015\012",$text);
   return htmlspecialchars($text);
 }
@@ -596,7 +596,7 @@ function formText($text){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function rawLocale($id){
+function rawLocale($id): string {
   return io_readFile(localeFN($id));
 }
 
@@ -605,7 +605,7 @@ function rawLocale($id){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function rawWiki($id,$rev=''){
+function rawWiki($id,string $rev=''){
   return io_readWikiPage(wikiFN($id, $rev), $id, $rev);
 }
 
@@ -614,7 +614,7 @@ function rawWiki($id,$rev=''){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function pageTemplate($data){
+function pageTemplate($data): string {
   $id = $data[0];
   global $conf;
   global $INFO;
@@ -640,7 +640,7 @@ function pageTemplate($data){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function rawWikiSlices($range,$id,$rev=''){
+function rawWikiSlices(string $range,$id,string $rev=''){
   list($from,$to) = explode('-',$range,2);
   $text = io_readWikiPage(wikiFN($id, $rev), $id, $rev);
   if(!$from) $from = 0;
@@ -662,7 +662,7 @@ function rawWikiSlices($range,$id,$rev=''){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function con($pre,$text,$suf,$pretty=false){
+function con($pre,string $text,$suf,bool $pretty=false): string {
 
   if($pretty){
     if($pre && substr($pre,-1) != "\n") $pre .= "\n";
@@ -681,7 +681,7 @@ function con($pre,$text,$suf,$pretty=false){
  * @author Andreas Gohr <andi@splitbrain.org>
  * @author Ben Coburn <btcoburn@silicodon.net>
  */
-function saveWikiText($id,$text,$summary,$minor=false){
+function saveWikiText($id,$text,$summary,bool $minor=false){
   /* Note to developers:
      This code is subtle and delicate. Test the behavior of
      the attic and changelog with dokuwiki and external edits
@@ -795,7 +795,7 @@ function saveOldRevision($id){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function notify($id,$who,$rev='',$summary='',$minor=false,$replace=array()){
+function notify($id,$who,string $rev='',$summary='',bool $minor=false,array $replace=array()){
   global $lang;
   global $conf;
 
@@ -863,7 +863,7 @@ function notify($id,$who,$rev='',$summary='',$minor=false,$replace=array()){
  * @todo   should be more generic and support yahoo et al
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function getGoogleQuery(){
+function getGoogleQuery(): string {
   $url = parse_url($_SERVER['HTTP_REFERER']);
   if(!$url) return '';
 
@@ -904,7 +904,7 @@ function setCorrectLocale(){
  * @author      Aidan Lister <aidan@php.net>
  * @version     1.0.0
  */
-function filesize_h($size, $dec = 1){
+function filesize_h($size, int $dec = 1): string {
   $sizes = array('B', 'KB', 'MB', 'GB');
   $count = count($sizes);
   $i = 0;
@@ -923,7 +923,7 @@ function filesize_h($size, $dec = 1){
  * @author Harry Fuecks <hfuecks@gmail.com>
  * @author Christopher Smith <chris@jalakai.co.uk>
  */
-function obfuscate($email) {
+function obfuscate($email) : string {
   global $conf;
 
   switch ($conf['mailguard']) {
@@ -947,7 +947,7 @@ function obfuscate($email) {
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function is_subscribed($id,$uid){
+function is_subscribed($id,string $uid){
   $file=metaFN($id,'.mlist');
   if (@file_exists($file)) {
     $mlist = file($file);

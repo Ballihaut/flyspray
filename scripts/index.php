@@ -86,8 +86,8 @@ $page->assign('userlist', $userlist);
 /**
  * tpl function that Displays a header cell for report list
  */
-function tpl_list_heading($colname, $format = "<th%s>%s</th>")
-{
+function tpl_list_heading($colname, string $format = "<th%s>%s</th>")
+: string {
     global $proj, $page;
     $imgbase = '<img src="%s" alt="%s" />';
     $class   = $colname;
@@ -145,7 +145,7 @@ function tpl_list_heading($colname, $format = "<th%s>%s</th>")
 /**
  * tpl function that  draws a cell
  */
-function tpl_draw_cell($task, $colname, $format = "<td class='%s'>%s</td>") {
+function tpl_draw_cell($task, $colname, string $format = "<td class='%s'>%s</td>") : string {
 	global $fs, $db, $proj, $page, $user;
 
 	$indexes = array (
@@ -352,7 +352,7 @@ $orderby;
  *
  */
 function do_cmp($a, $b)
-{
+: int {
  global $sort,$orderby;
 
  if ($a[ $orderby ] == $b[ $orderby ]) { return 0; }
@@ -366,7 +366,7 @@ function do_cmp($a, $b)
 /**
 * workaround fputcsv() bug https://bugs.php.net/bug.php?id=43225
 */
-function my_fputcsv($handle, $fields)
+function my_fputcsv($handle, iterable $fields)
 {
   $out = array();
 

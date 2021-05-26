@@ -1,5 +1,5 @@
 <?php
-/**
+die(/**
  * DokuWiki media passthrough file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
@@ -7,7 +7,7 @@
  */
 
 # security hotfix
-die();
+);
 
   if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
   define('DOKU_DISABLE_GZIP_OUTPUT', 1);
@@ -76,7 +76,7 @@ die();
  * @author Andreas Gohr <andi@splitbrain.org>
  * @author Ben Coburn <btcoburn@silicodon.net>
  */
-function sendFile($file,$mime,$cache){
+function sendFile(string $file,string $mime,$cache){
   global $conf;
   $fmtime = filemtime($file);
   // send headers
@@ -172,7 +172,7 @@ function http_rangeRequest($size){
  *
  * @author  Andreas Gohr <andi@splitbrain.org>
  */
-function get_resized($file, $ext, $w, $h=0){
+function get_resized(string $file, string $ext, $w, $h=0){
   global $conf;
 
   $info  = getimagesize($file);
@@ -201,7 +201,7 @@ function get_resized($file, $ext, $w, $h=0){
  *
  * @author  Andreas Gohr <andi@splitbrain.org>
  */
-function calc_cache($cache){
+function calc_cache(string $cache): int {
   global $conf;
 
   if(strtolower($cache) == 'nocache') return 0; //never cache
@@ -218,7 +218,7 @@ function calc_cache($cache){
  * @author  Andreas Gohr <andi@splitbrain.org>
  * @author  Pavel Vitis <Pavel.Vitis@seznam.cz>
  */
-function get_from_URL($url,$ext,$cache){
+function get_from_URL(string $url,string $ext,$cache){
   global $conf;
 
   // if no cache or fetchsize just redirect
@@ -251,7 +251,7 @@ function get_from_URL($url,$ext,$cache){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function image_download($url,$file){
+function image_download($url,string $file): bool {
   global $conf;
   $http = new DokuHTTPClient();
   $http->max_bodysize = $conf['fetchsize'];
@@ -284,7 +284,7 @@ function image_download($url,$file){
  * @author Pavel Vitis <Pavel.Vitis@seznam.cz>
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function resize_imageIM($ext,$from,$from_w,$from_h,$to,$to_w,$to_h){
+function resize_imageIM(bool $ext,string $from,$from_w,$from_h,string $to,string $to_w,string $to_h): bool {
   global $conf;
 
   // check if convert is configured
@@ -308,7 +308,7 @@ function resize_imageIM($ext,$from,$from_w,$from_h,$to,$to_w,$to_h){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function resize_imageGD($ext,$from,$from_w,$from_h,$to,$to_w,$to_h){
+function resize_imageGD(bool $ext,string $from,int $from_w,int $from_h,$to,int $to_w,int $to_h): bool {
   global $conf;
 
   if($conf['gdlib'] < 1) return false; //no GDlib available or wanted
@@ -395,7 +395,7 @@ function resize_imageGD($ext,$from,$from_w,$from_h,$to,$to_w,$to_h){
  * @author Filip Oscadal <webmaster@illusionsoftworks.cz>
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function is_mem_available($mem,$bytes=1048576){
+function is_mem_available(int $mem,int $bytes=1048576): bool {
   $limit = trim(ini_get('memory_limit'));
   if(empty($limit)) return true; // no limit set!
 

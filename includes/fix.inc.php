@@ -60,7 +60,7 @@ if(!function_exists('password_hash')){
 
 # for php < php.5.6
 if(!function_exists('hash_equals')) {
-	function hash_equals($str1, $str2) {
+	function hash_equals(string $str1, string $str2) {
 		if(strlen($str1) != strlen($str2)) {
 			return false;
 		} else {
@@ -143,7 +143,7 @@ if (!isset($_SERVER['QUERY_STRING']))
  * @require     PHP 4.3.0 (fnmatch)
  * @todo is this still required?
  */
-function glob_compat($pattern, $flags = 0) {
+function glob_compat(string $pattern, int $flags = 0) : bool {
 
     $split = explode('/', $pattern);
     $match = array_pop($split);
@@ -168,7 +168,7 @@ function glob_compat($pattern, $flags = 0) {
 // now for all those borked PHP installations...
 // TODO still required. Enabled by default since 4.2
 if (!function_exists('ctype_alnum')) {
-	function ctype_alnum($text) {
+	function ctype_alnum($text) : bool {
 		return is_string($text) && preg_match('/^[a-z0-9]+$/iD', $text);
 	}
 }

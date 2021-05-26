@@ -58,7 +58,7 @@ function io_sweepNS($id,$basedir='datadir'){
  *
  * @author Ben Coburn <btcoburn@silicodon.net>
  */
-function io_readWikiPage($file, $id, $rev=false) {
+function io_readWikiPage($file, $id, bool $rev=false) {
     if (empty($rev)) { $rev = false; }
     $data = array(array($file, false), getNS($id), noNS($id), $rev);
     return trigger_event('IO_WIKIPAGE_READ', $data, '_io_readWikiPage_action', false);
@@ -86,7 +86,7 @@ function _io_readWikiPage_action($data) {
  *
  * @author  Andreas Gohr <andi@splitbrain.org>
  */
-function io_readFile($file,$clean=true){
+function io_readFile(string $file,bool $clean=true): string {
   $ret = '';
   if(@file_exists($file)){
     if(substr($file,-3) == '.gz'){
@@ -135,7 +135,7 @@ function bzfile($file){
  *
  * @author Ben Coburn <btcoburn@silicodon.net>
  */
-function io_writeWikiPage($file, $content, $id, $rev=false) {
+function io_writeWikiPage($file, $content, $id, bool $rev=false) {
     if (empty($rev)) { $rev = false; }
     if ($rev===false) { io_createNamespace($id); } // create namespaces as needed
     $data = array(array($file, $content, false), getNS($id), noNS($id), $rev);
@@ -166,7 +166,7 @@ function _io_writeWikiPage_action($data) {
  * @author  Andreas Gohr <andi@splitbrain.org>
  * @return bool true on success
  */
-function io_saveFile($file,$content,$append=false){
+function io_saveFile($file,string $content,bool $append=false): bool {
   global $conf;
   $mode = ($append) ? 'ab' : 'wb';
 
@@ -219,7 +219,7 @@ function io_saveFile($file,$content,$append=false){
  * @author Steven Danz <steven-danz@kc.rr.com>
  * @return bool true on success
  */
-function io_deleteFromFile($file,$badline,$regex=false){
+function io_deleteFromFile(string $file,$badline,bool $regex=false): bool {
   if (!@file_exists($file)) return true;
 
   io_lock($file);
@@ -282,7 +282,7 @@ function io_deleteFromFile($file,$badline,$regex=false){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function io_lock($file){
+function io_lock(string $file){
   global $conf;
   // no locking if safemode hack
   if($conf['safemodehack']) return;
@@ -308,7 +308,7 @@ function io_lock($file){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function io_unlock($file){
+function io_unlock(string $file){
   global $conf;
   // no locking if safemode hack
   if($conf['safemodehack']) return;
@@ -328,7 +328,7 @@ function io_unlock($file){
  *
  * @author Ben Coburn <btcoburn@silicodon.net>
  */
-function io_createNamespace($id, $ns_type='pages') {
+function io_createNamespace(string $id, $ns_type='pages') {
     // verify ns_type
     $types = array('pages'=>'wikiFN', 'media'=>'mediaFN');
     if (!isset($types[$ns_type])) {
@@ -362,7 +362,7 @@ function io_createNamespace($id, $ns_type='pages') {
  *
  * @author  Andreas Gohr <andi@splitbrain.org>
  */
-function io_makeFileDir($file){
+function io_makeFileDir(string $file){
   global $conf;
 
   $dir = dirname($file);
@@ -403,7 +403,7 @@ function io_mkdir_p($target){
  *
  * @author <andi@splitbrain.org>
  */
-function io_mkdir_ftp($dir){
+function io_mkdir_ftp(string $dir){
   global $conf;
 
   if(!function_exists('ftp_connect')){
@@ -445,7 +445,7 @@ function io_mkdir_ftp($dir){
  * @author Andreas Gohr <andi@splitbrain.org>
  * @author Chris Smith <chris@jalakai.co.uk>
  */
-function io_download($url,$file,$useAttachment=false,$defaultName='',$maxSize=2097152){
+function io_download($url,string $file,bool $useAttachment=false,string $defaultName='',int $maxSize=2097152){
   global $conf;
   $http = new DokuHTTPClient();
   $http->max_bodysize = $maxSize;
@@ -491,7 +491,7 @@ function io_download($url,$file,$useAttachment=false,$defaultName='',$maxSize=20
  * rename() can not overwrite existing files on Windows
  * this function will use copy/unlink instead
  */
-function io_rename($from,$to){
+function io_rename(string $from,string $to): bool {
   global $conf;
   if(!@rename($from,$to)){
     if(@copy($from,$to)){
@@ -512,7 +512,7 @@ function io_rename($from,$to){
  * @author Andreas Gohr <andi@splitbrain.org>
  * @deprecated
  */
-function io_runcmd($cmd){
+function io_runcmd(string $cmd){
   $fh = popen($cmd, "r");
   if(!$fh) return false;
   $ret = '';
@@ -537,7 +537,7 @@ function io_runcmd($cmd){
  * @param  bool   $baxkref When true returns array with backreferences instead of lines
  * @return matching lines or backref, false on error
  */
-function io_grep($file,$pattern,$max=0,$backref=false){
+function io_grep(string $file,string $pattern,$max=0,bool $backref=false){
   $fh = @fopen($file,'r');
   if(!$fh) return false;
   $matches = array();

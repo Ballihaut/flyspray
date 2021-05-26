@@ -70,7 +70,7 @@ abstract class Post
     }
 
     public static function val($key, $default = null)
-    {
+    : iterable {
         return Post::has($key) ? $_POST[$key] : $default;
     }
 
@@ -98,7 +98,7 @@ abstract class Post
 abstract class Get
 {
     public static function has($key)
-    {
+    : bool {
         return isset($_GET[$key]) && $_GET[$key] !== '';
     }
 
@@ -163,7 +163,7 @@ abstract class Filters {
      * with arrays and objects
      */
     public static function num($data)
-    {
+    : int {
          return intval($data); // no further checks here please
     }
     
@@ -190,7 +190,7 @@ abstract class Filters {
      * @access public static
      */
     public static function noJsXSS($data)
-    {
+    : string {
         if(empty($data) || is_numeric($data)) {
             return $data;
         } elseif(is_string($data)) {
@@ -213,7 +213,7 @@ abstract class Filters {
      * type is evaluated to FALSE
      */
     public static function isAlnum($data)
-    {
+    : bool {
         return ctype_alnum($data) && strlen($data);
     }
 
@@ -234,8 +234,8 @@ abstract class Filters {
         return $data;
     }
 
-    public static function escapeqs($qs)
-    {
+    public static function escapeqs(string $qs)
+    : string {
             parse_str($qs, $clean_qs);
             return http_build_query($clean_qs);
     }

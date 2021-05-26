@@ -4,7 +4,7 @@
  */
 
   // start timing Dokuwiki execution
-  function delta_time($start=0) {
+  function delta_time(int $start=0) : int {
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec+(float)$sec)-((float)$start);
   }
@@ -172,7 +172,7 @@ function init_files(){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function init_path($path){
+function init_path(string $path){
   // check existance
   $p = realpath($path);
   if(!@file_exists($p)){
@@ -247,7 +247,7 @@ function remove_magic_quotes(&$array) {
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function getBaseURL($abs=false){
+function getBaseURL(bool $abs=false){
   global $conf;
   //if canonical url enabled always return absolute
   if($conf['canonical']) $abs = true;
@@ -314,7 +314,7 @@ function getBaseURL($abs=false){
  *
  * @author Jan Decaluwe <jan@jandecaluwe.com>
  */
-function scriptify($file) {
+function scriptify(string $file) {
   // checks
   if (!is_readable($file)) {
     return;
@@ -345,7 +345,7 @@ function scriptify($file) {
 /**
  * print a nice message even if no styles are loaded yet.
  */
-function nice_die($msg){
+function nice_die(string $msg){
   echo<<<EOT
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">

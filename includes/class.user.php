@@ -2,11 +2,11 @@
 
 class User
 {
-    public $id = -1;
-    public $perms = array();
-    public $infos = array();
-    public $searches = array();
-    public $search_keys = array('project', 'string', 'type', 'sev', 'pri', 'due', 'dev', 'cat', 'status', 'percent', 'changedfrom', 'closedfrom',
+    public int $id = -1;
+    public array $perms = array();
+    public array $infos = array();
+    public array $searches = array();
+    public array $search_keys = array('project', 'string', 'type', 'sev', 'pri', 'due', 'dev', 'cat', 'status', 'percent', 'changedfrom', 'closedfrom',
                              'opened', 'closed', 'search_in_comments', 'search_in_details', 'search_for_all', 'reported', 'only_primary', 'only_watched', 'closedto',
                              'changedto', 'duedatefrom', 'duedateto', 'openedfrom', 'openedto', 'has_attachment', 'hide_subtasks');
 
@@ -41,7 +41,7 @@ class User
      * @return void
      * @notes FIXME: must return something, should not merge _GET and _REQUEST with other stuff.
      */
-    public function save_search($do = 'index')
+    public function save_search(string $do = 'index')
     {
         global $db;
 
@@ -77,7 +77,7 @@ class User
         $this->searches = $db->fetchAllArray($sql);
     }
 
-    public function perms($name, $project = null) {
+    public function perms($name, $project = null) : int {
         if (is_null($project)) {
             global $proj;
             $project = $proj->id;
@@ -176,7 +176,7 @@ class User
     }
 
     public function isAnon()
-    {
+    : bool {
         return $this->id < 0;
     }
 
@@ -184,13 +184,13 @@ class User
     /* permission related {{{ */
 
     public function can_edit_comment($comment)
-    {
+    : bool {
         return $this->perms('edit_comments')
                || ($comment['user_id'] == $this->id && $this->perms('edit_own_comments'));
     }
 
     public function can_view_project($proj)
-    {
+    : bool {
         if (is_array($proj) && isset($proj['project_id'])) {
             $proj = $proj['project_id'];
         }
@@ -205,7 +205,7 @@ class User
      * but all other stuff is restricted.
      */
     public function can_select_project($proj)
-    {
+    : bool {
         if (is_array($proj) && isset($proj['project_id'])) {
             $proj = $proj['project_id'];
         }
@@ -227,7 +227,7 @@ class User
     }
 
     public function can_view_task($task)
-    {
+    : bool {
         if ($task['task_token'] && Get::val('task_token') == $task['task_token']) {
             return true;
         }
@@ -340,7 +340,7 @@ class User
     }
 
     public function can_edit_task($task)
-    {
+    : bool {
         return !$task['is_closed'] && (
                $this->perms('modify_all_tasks', $task['project_id']) ||
                ($this->id == $task['opened_by'] && $this->perms('modify_own_tasks', $task['project_id'])) ||
@@ -349,7 +349,7 @@ class User
     }
 
     public function can_take_ownership($task)
-    {
+    : bool {
         $assignees = Flyspray::getAssignees($task['task_id']);
 
         return ($this->perms('assign_to_self', $task['project_id']) && empty($assignees))
@@ -362,13 +362,13 @@ class User
     }
 
     public function can_close_task($task)
-    {
+    : bool {
         return ($this->perms('close_own_tasks', $task['project_id']) && in_array($this->id, $task['assigned_to']))
                 || $this->perms('close_other_tasks', $task['project_id']);
     }
 
     public function can_set_task_parent($task)
-    {
+    : bool {
         return !$task['is_closed'] && (
                 $this->perms('modify_all_tasks', $task['project_id']) ||
                 in_array($this->id, Flyspray::getAssignees($task['task_id']))
@@ -376,7 +376,7 @@ class User
     }
 
     public function can_associate_task($task)
-    {
+    : bool {
         return !$task['is_closed'] && (
                 $this->perms('modify_all_tasks', $task['project_id']) ||
                 in_array($this->id, Flyspray::getAssignees($task['task_id']))
@@ -384,7 +384,7 @@ class User
     }
 
     public function can_add_task_dependency($task)
-    {
+    : bool {
         return !$task['is_closed'] && (
                 $this->perms('modify_all_tasks', $task['project_id']) ||
                 in_array($this->id, Flyspray::getAssignees($task['task_id']))
@@ -393,7 +393,7 @@ class User
 
 //admin approve user registration
     public function need_admin_approval()
-    {
+    : bool {
 	global $fs;
 	return $this->isAnon() && $fs->prefs['need_approval'] && $fs->prefs['anon_reg'];
     }
@@ -406,7 +406,7 @@ class User
     * tests if current configuration allows a guest user to register - without email verification code
     */
     public function can_self_register()
-    {
+    : bool {
         global $fs;
         return $this->isAnon() && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'] && !$fs->prefs['spam_proof'] ;
     }
@@ -415,24 +415,24 @@ class User
     * tests if current configuration allows a guest user to register - with email verification code
     */
     public function can_register()
-    {
+    : bool {
         global $fs;
         return $this->isAnon() && $fs->prefs['anon_reg'] && !$fs->prefs['only_oauth_reg'] && $fs->prefs['spam_proof'] && !$fs->prefs['need_approval'] ;
     }
 
     public function can_open_task($proj)
-    {
+    : bool {
         return $proj->id && ($this->perms('manage_project') ||
                  $this->perms('project_is_active', $proj->id) && ($this->perms('open_new_tasks') || $this->perms('anon_open', $proj->id)));
     }
 
     public function can_change_private($task)
-    {
+    : bool {
         return !$task['is_closed'] && ($this->perms('manage_project', $task['project_id']) || in_array($this->id, Flyspray::getAssignees($task['task_id'])));
     }
 
     public function can_vote($task)
-    {
+    : int {
         global $db, $fs;
 
         if (!$this->perms('add_votes', $task['project_id'])) {
@@ -521,7 +521,7 @@ class User
      * @return array used to get the count
      * @access public
      */
-    static function getDayActivityByUser($date_start, $date_end, $project_id, $userid) {
+    static function getDayActivityByUser(string $date_start, $date_end, $project_id, $userid) : array {
         global $db;
         //NOTE: from_unixtime() on mysql, to_timestamp() on PostreSQL
         $func = ('mysql' == $db->dblink->dataProvider) ? 'from_unixtime' : 'to_timestamp';

@@ -22,7 +22,7 @@
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function p_wiki_xhtml($id, $rev='', $excuse=true){
+function p_wiki_xhtml($id, string $rev='', bool $excuse=true){
   $file = wikiFN($id,$rev);
   $ret  = '';
 
@@ -63,7 +63,7 @@ function p_wiki_xhtml($id, $rev='', $excuse=true){
  * @deprecated
  * @author Harry Fuecks <hfuecks@gmail.com>
  */
-function p_wiki_xhtml_summary($id, &$title, $rev='', $excuse=true){
+function p_wiki_xhtml_summary($id, &$title, string $rev='', bool $excuse=true){
   $file = wikiFN($id,$rev);
   $ret  = '';
 
@@ -142,7 +142,7 @@ function p_cached_xhtml($file){
  * @author Andreas Gohr <andi@splitbrain.org>
  * @author Chris Smith <chris@jalakai.co.uk>
  */
-function p_cached_output($file, $format='xhtml', $id='') {
+function p_cached_output($file, string $format='xhtml', string $id='') {
   global $conf;
 
   $cache = new cache_renderer($id, $file, $format);
@@ -171,7 +171,7 @@ function p_cached_output($file, $format='xhtml', $id='') {
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function p_cached_instructions($file,$cacheonly=false,$id='') {
+function p_cached_instructions($file,bool $cacheonly=false,string $id='') {
   global $conf;
 
   $cache = new cache_instructions($id, $file);
@@ -221,7 +221,7 @@ function p_get_instructions($text){
  *
  * @author Esther Brunner <esther@kaffeehaus.ch>
  */
-function p_get_metadata($id, $key=false, $render=false){
+function p_get_metadata(bool $id, $key=false, bool $render=false){
   global $INFO;
 
   if ($id == $INFO['id'] && !empty($INFO['meta'])) {
@@ -254,7 +254,7 @@ function p_get_metadata($id, $key=false, $render=false){
  *
  * @author Esther Brunner <esther@kaffeehaus.ch>
  */
-function p_set_metadata($id, $data, $render=false){
+function p_set_metadata(bool $id, $data, bool $render=false): bool {
   if (!is_array($data)) return false;
 
   $orig = p_get_metadata($id);
@@ -420,7 +420,7 @@ function p_get_parsermodes(){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function p_sort_modes($a, $b){
+function p_sort_modes($a, $b): int {
   if($a['sort'] == $b['sort']) return 0;
   return ($a['sort'] < $b['sort']) ? -1 : 1;
 }
@@ -433,7 +433,7 @@ function p_sort_modes($a, $b){
  * @author Harry Fuecks <hfuecks@gmail.com>
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function p_render($mode,$instructions,& $info){
+function p_render(string $mode,$instructions,& $info){
   if(is_null($instructions)) return '';
 
   if ($mode=='wiki') { msg("Renderer for $mode not valid",-1); return null; } //FIXME!! remove this line when inc/parser/wiki.php works.
@@ -489,7 +489,7 @@ function p_get_first_heading($id){
  *
  * @author Christopher Smith <chris@jalakai.co.uk>
  */
-function p_xhtml_cached_geshi($code, $language) {
+function p_xhtml_cached_geshi(string $code, string $language) : string {
   $cache = getCacheName($language.$code,".code");
 
   if (@file_exists($cache) && !$_REQUEST['purge'] &&
